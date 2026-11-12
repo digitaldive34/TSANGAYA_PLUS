@@ -1,9 +1,18 @@
-import { Link } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-react';
-import AppLogo from '@/components/app-logo';
-import { NavFooter } from '@/components/nav-footer';
-import { NavMain } from '@/components/nav-main';
-import { NavUser } from '@/components/nav-user';
+import { Link, usePage } from "@inertiajs/react";
+import {
+    Activity,
+    BookOpen,
+    Building2,
+    ClipboardCheck,
+    GraduationCap,
+    HeartHandshake,
+    LayoutDashboard,
+    Users,
+} from "lucide-react";
+
+import AppLogo from "@/components/app-logo";
+import { NavMain } from "@/components/nav-main";
+import { NavUser } from "@/components/nav-user";
 import {
     Sidebar,
     SidebarContent,
@@ -12,39 +21,95 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-} from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
-import type { NavItem } from '@/types';
+} from "@/components/ui/sidebar";
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
-];
-
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: FolderGit2,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
-    },
-];
+import admin from "@/routes/admin";
+import programmeOfficer from "@/routes/programme-officer";
+import teacher from "@/routes/teacher";
+import { dashboard } from "@/routes";
+import type { NavItem } from "@/types";
 
 export function AppSidebar() {
+    const { auth } = usePage().props;
+    const role = auth?.user?.role;
+
+    let dashboardUrl = dashboard();
+    let navigationItems: NavItem[] = [];
+
+    if (role === "Admin") {
+        dashboardUrl = admin.dashboard();
+
+        navigationItems = [
+            {
+                title: "Dashboard",
+                href: admin.dashboard(),
+                icon: LayoutDashboard,
+            },
+            {
+                title: "Centres",
+                href: admin.centres.index(),
+                icon: Building2,
+            },
+            {
+                title: "Learning Sessions",
+                href: admin.learningSessions.index(),
+                icon: BookOpen,
+            },
+            {
+                title: "Staff Management",
+                href: admin.users.index(),
+                icon: Users,
+            },
+            {
+                title: "Activity Logs",
+                href: admin.activities.index(),
+                icon: Activity,
+            },
+        ];
+    } else if (role === "Programme Officer") {
+        dashboardUrl = programmeOfficer.dashboard();
+
+        navigationItems = [
+            {
+                title: "Dashboard",
+                href: programmeOfficer.dashboard(),
+                icon: LayoutDashboard,
+            },
+            {
+                title: "Learners",
+                href: programmeOfficer.learners.index(),
+                icon: GraduationCap,
+            },
+            {
+                title: "Welfare Support",
+                href: programmeOfficer.welfare.index(),
+                icon: HeartHandshake,
+            },
+        ];
+    } else if (role === "Teacher") {
+        dashboardUrl = teacher.dashboard();
+
+        navigationItems = [
+            {
+                title: "Dashboard",
+                href: teacher.dashboard(),
+                icon: LayoutDashboard,
+            },
+            {
+                title: "My Assessments",
+                href: teacher.assessments.index(),
+                icon: ClipboardCheck,
+            },
+        ];
+    }
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={dashboard()} prefetch>
+                            <Link href={dashboardUrl} prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>
@@ -53,11 +118,10 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain items={navigationItems} />
             </SidebarContent>
 
             <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
                 <NavUser />
             </SidebarFooter>
         </Sidebar>

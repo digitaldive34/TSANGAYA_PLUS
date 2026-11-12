@@ -1,7 +1,6 @@
-import { Link } from '@inertiajs/react';
-import AppLogoIcon from '@/components/app-logo-icon';
-import { home } from '@/routes';
-import type { AuthLayoutProps } from '@/types';
+import { Link } from "@inertiajs/react";
+import { home } from "@/routes";
+import type { AuthLayoutProps } from "@/types";
 
 export default function AuthSimpleLayout({
     children,
@@ -9,29 +8,104 @@ export default function AuthSimpleLayout({
     description,
 }: AuthLayoutProps) {
     return (
-        <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10">
-            <div className="w-full max-w-sm">
-                <div className="flex flex-col gap-8">
-                    <div className="flex flex-col items-center gap-4">
-                        <Link
-                            href={home()}
-                            className="flex flex-col items-center gap-2 font-medium"
-                        >
-                            <div className="mb-1 flex h-9 w-9 items-center justify-center rounded-md">
-                                <AppLogoIcon className="size-9 fill-current text-[var(--foreground)] dark:text-white" />
-                            </div>
-                            <span className="sr-only">{title}</span>
-                        </Link>
+        <div className="min-h-svh bg-slate-50 lg:grid lg:grid-cols-2">
+            {/* Left Branding Panel */}
+            <div className="relative hidden overflow-hidden bg-slate-950 lg:flex lg:flex-col lg:justify-between lg:p-12 xl:p-16">
+                <img
+                    src="/images/tsangaya-hero.jpeg"
+                    alt="Learners in a Tsangaya learning environment"
+                    className="absolute inset-0 size-full object-cover opacity-25"
+                />
 
-                        <div className="space-y-2 text-center">
-                            <h1 className="text-xl font-medium">{title}</h1>
-                            <p className="text-center text-sm text-muted-foreground">
+                <div className="absolute inset-0 bg-linear-to-br from-slate-950/95 via-slate-900/80 to-slate-950/90" />
+
+                <div className="relative z-10">
+                    <Link
+                        href={home()}
+                        className="text-3xl font-bold tracking-tight text-white"
+                    >
+                        TSANGAYA<span className="text-amber-500">+</span>
+                    </Link>
+
+                    <p className="mt-2 text-sm text-slate-300">
+                        Foundational Literacy • Numeracy • Quranic Education
+                    </p>
+                </div>
+
+                <div className="relative z-10 max-w-xl">
+                    <p className="text-sm font-semibold tracking-widest text-amber-400">
+                        WELCOME TO TSANGAYA+
+                    </p>
+
+                    <h2 className="mt-5 text-4xl font-bold leading-tight text-white xl:text-5xl">
+                        Making room for foundational learning.
+                        <span className="block text-amber-400">
+                            Alongside Quranic education.
+                        </span>
+                    </h2>
+
+                    <p className="mt-6 max-w-lg text-base leading-8 text-slate-300">
+                        A platform for coordinating basic literacy, numeracy
+                        and modern education within Tsangaya schedules, while
+                        respecting Quranic learning.
+                    </p>
+                </div>
+
+                <div className="relative z-10 border-t border-white/20 pt-6">
+                    <p className="text-sm text-slate-400">
+                        Supporting traditional education through practical
+                        digital solutions.
+                    </p>
+                </div>
+            </div>
+
+            {/* Login Panel */}
+            <div className="flex min-h-svh flex-col items-center justify-center px-6 py-10 sm:px-10">
+                <div className="mb-10 w-full max-w-md lg:hidden">
+                    <Link
+                        href={home()}
+                        className="text-2xl font-bold tracking-tight text-slate-900"
+                    >
+                        TSANGAYA<span className="text-amber-600">+</span>
+                    </Link>
+
+                    <p className="mt-2 text-sm text-slate-500">
+                        Foundational Literacy • Numeracy • Quranic Education
+                    </p>
+                </div>
+
+                <div className="w-full max-w-md">
+                    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-9">
+                        <div className="mb-8">
+                            <p className="text-sm font-semibold tracking-widest text-amber-600">
+                                STAFF PORTAL
+                            </p>
+
+                            <h1 className="mt-3 text-2xl font-bold tracking-tight text-slate-900">
+                                {title}
+                            </h1>
+
+                            <p className="mt-2 text-sm leading-6 text-slate-500">
                                 {description}
                             </p>
                         </div>
+
+                        {children}
                     </div>
-                    {children}
+
+                    <div className="mt-6 text-center">
+                        <Link
+                            href={home()}
+                            className="text-sm font-medium text-slate-500 transition hover:text-amber-600"
+                        >
+                            ← Back to homepage
+                        </Link>
+                    </div>
                 </div>
+
+                <p className="mt-10 text-center text-xs text-slate-400">
+                    © {new Date().getFullYear()} TSANGAYA+. All rights reserved.
+                </p>
             </div>
         </div>
     );

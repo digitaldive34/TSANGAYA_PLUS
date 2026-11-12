@@ -88,7 +88,7 @@ return [
 
     'prefix' => '',
 
-    'domain' => null,
+    'domain' => null, 
 
     /*
     |--------------------------------------------------------------------------
@@ -143,7 +143,6 @@ return [
     */
 
     'features' => [
-        Features::registration(),
         Features::resetPasswords(),
     ],
 

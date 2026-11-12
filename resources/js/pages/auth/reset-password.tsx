@@ -1,11 +1,11 @@
-import { Form, Head } from '@inertiajs/react';
-import InputError from '@/components/input-error';
-import PasswordInput from '@/components/password-input';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
-import { update } from '@/routes/password';
+import { Form, Head } from "@inertiajs/react";
+import { KeyRound, LoaderCircle } from "lucide-react";
+import InputError from "@/components/input-error";
+import PasswordInput from "@/components/password-input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { update } from "@/routes/password";
 
 type Props = {
     token: string;
@@ -18,39 +18,46 @@ export default function ResetPassword({ token, email, passwordRules }: Props) {
         <>
             <Head title="Reset password" />
 
+            <div className="mb-6 rounded-lg border border-amber-100 bg-amber-50/70 p-4">
+                <div className="flex items-start gap-3">
+                    <KeyRound className="mt-0.5 h-5 w-5 shrink-0 text-amber-700" />
+                    <p className="text-sm leading-6 text-slate-600">
+                        Create a new password for your TSANGAYA+ staff account.
+                        Enter your new password below and confirm it to
+                        continue.
+                    </p>
+                </div>
+            </div>
+
             <Form
                 {...update.form()}
                 transform={(data) => ({ ...data, token, email })}
-                resetOnSuccess={['password', 'password_confirmation']}
+                resetOnSuccess={["password", "password_confirmation"]}
             >
                 {({ processing, errors }) => (
-                    <div className="grid gap-6">
+                    <div className="grid gap-5">
                         <div className="grid gap-2">
-                            <Label htmlFor="email">Email</Label>
+                            <Label htmlFor="email">Email address</Label>
                             <Input
                                 id="email"
                                 type="email"
                                 name="email"
                                 autoComplete="email"
                                 value={email}
-                                className="mt-1 block w-full"
                                 readOnly
+                                className="bg-slate-50 text-slate-500"
                             />
-                            <InputError
-                                message={errors.email}
-                                className="mt-2"
-                            />
+                            <InputError message={errors.email} />
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="password">Password</Label>
+                            <Label htmlFor="password">New password</Label>
                             <PasswordInput
                                 id="password"
                                 name="password"
                                 autoComplete="new-password"
-                                className="mt-1 block w-full"
                                 autoFocus
-                                placeholder="Password"
+                                placeholder="Enter new password"
                                 passwordrules={passwordRules}
                             />
                             <InputError message={errors.password} />
@@ -58,29 +65,29 @@ export default function ResetPassword({ token, email, passwordRules }: Props) {
 
                         <div className="grid gap-2">
                             <Label htmlFor="password_confirmation">
-                                Confirm password
+                                Confirm new password
                             </Label>
                             <PasswordInput
                                 id="password_confirmation"
                                 name="password_confirmation"
                                 autoComplete="new-password"
-                                className="mt-1 block w-full"
-                                placeholder="Confirm password"
+                                placeholder="Confirm new password"
                                 passwordrules={passwordRules}
                             />
                             <InputError
                                 message={errors.password_confirmation}
-                                className="mt-2"
                             />
                         </div>
 
                         <Button
                             type="submit"
-                            className="mt-4 w-full"
+                            className="mt-2 w-full"
                             disabled={processing}
                             data-test="reset-password-button"
                         >
-                            {processing && <Spinner />}
+                            {processing && (
+                                <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                            )}
                             Reset password
                         </Button>
                     </div>
@@ -91,6 +98,6 @@ export default function ResetPassword({ token, email, passwordRules }: Props) {
 }
 
 ResetPassword.layout = {
-    title: 'Reset password',
-    description: 'Please enter your new password below',
+    title: "Create a new password",
+    description: "Choose a new password to regain access to your account",
 };
