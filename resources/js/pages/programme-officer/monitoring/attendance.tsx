@@ -1,9 +1,9 @@
-import { Head, router } from "@inertiajs/react";
-import { useState } from "react";
+import { Head, router } from '@inertiajs/react';
+import { useState } from 'react';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import DataTableFilters from "@/components/data-table-filters";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import DataTableFilters from '@/components/data-table-filters';
 import {
     Table,
     TableBody,
@@ -11,7 +11,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 
 interface Centre {
     id: number;
@@ -31,7 +31,7 @@ interface Session {
 
 interface AttendanceRecord {
     id: number;
-    status: "Present" | "Absent";
+    status: 'Present' | 'Absent';
     learner: { full_name: string; learner_code: string };
     markedBy: { name: string };
 }
@@ -52,14 +52,14 @@ export default function AttendanceMonitoring({
     attendance,
     filters,
 }: Props) {
-    const [centreId, setCentreId] = useState(filters.centre_id ?? "");
-    const [sessionId, setSessionId] = useState(filters.session_id ?? "");
-    const [search, setSearch] = useState("");
-    const [attendanceStatus, setAttendanceStatus] = useState("all");
+    const [centreId, setCentreId] = useState(filters.centre_id ?? '');
+    const [sessionId, setSessionId] = useState(filters.session_id ?? '');
+    const [search, setSearch] = useState('');
+    const [attendanceStatus, setAttendanceStatus] = useState('all');
 
     const applyFilters = () => {
         router.get(
-            "/programme-officer/monitoring/attendance",
+            '/programme-officer/monitoring/attendance',
             {
                 centre_id: centreId || undefined,
                 session_id: sessionId || undefined,
@@ -69,11 +69,11 @@ export default function AttendanceMonitoring({
     };
 
     const clearFilters = () => {
-        setCentreId("");
-        setSessionId("");
-        setSearch("");
-        setAttendanceStatus("all");
-        router.get("/programme-officer/monitoring/attendance");
+        setCentreId('');
+        setSessionId('');
+        setSearch('');
+        setAttendanceStatus('all');
+        router.get('/programme-officer/monitoring/attendance');
     };
 
     return (
@@ -105,7 +105,7 @@ export default function AttendanceMonitoring({
                                     value={centreId}
                                     onChange={(event) => {
                                         setCentreId(event.target.value);
-                                        setSessionId("");
+                                        setSessionId('');
                                     }}
                                     className="h-10 w-full rounded-md border bg-background px-3 text-sm"
                                 >
@@ -138,7 +138,7 @@ export default function AttendanceMonitoring({
                                             key={session.id}
                                             value={session.id}
                                         >
-                                            {session.topic} -{" "}
+                                            {session.topic} -{' '}
                                             {session.session_date}
                                         </option>
                                     ))}
@@ -164,14 +164,23 @@ export default function AttendanceMonitoring({
                                 onSearchChange={setSearch}
                                 filters={[
                                     {
-                                        key: "attendance-status",
-                                        label: "Attendance",
+                                        key: 'attendance-status',
+                                        label: 'Attendance',
                                         value: attendanceStatus,
                                         onChange: setAttendanceStatus,
                                         options: [
-                                            { label: "All statuses", value: "all" },
-                                            { label: "Present", value: "Present" },
-                                            { label: "Absent", value: "Absent" },
+                                            {
+                                                label: 'All statuses',
+                                                value: 'all',
+                                            },
+                                            {
+                                                label: 'Present',
+                                                value: 'Present',
+                                            },
+                                            {
+                                                label: 'Absent',
+                                                value: 'Absent',
+                                            },
                                         ],
                                     },
                                 ]}
@@ -193,19 +202,19 @@ export default function AttendanceMonitoring({
                         const records = attendance[String(session.id)] ?? [];
                         const filteredRecords = records.filter((record) => {
                             const matchesSearch =
-                                `${record.learner?.full_name ?? ""} ${record.learner?.learner_code ?? ""}`
+                                `${record.learner?.full_name ?? ''} ${record.learner?.learner_code ?? ''}`
                                     .toLowerCase()
                                     .includes(search.toLowerCase());
                             const matchesStatus =
-                                attendanceStatus === "all" ||
+                                attendanceStatus === 'all' ||
                                 record.status === attendanceStatus;
                             return matchesSearch && matchesStatus;
                         });
                         const present = filteredRecords.filter(
-                            (record) => record.status === "Present",
+                            (record) => record.status === 'Present',
                         ).length;
                         const absent = filteredRecords.filter(
-                            (record) => record.status === "Absent",
+                            (record) => record.status === 'Absent',
                         ).length;
 
                         return (
@@ -217,12 +226,12 @@ export default function AttendanceMonitoring({
                                                 {session.topic}
                                             </CardTitle>
                                             <p className="mt-1 text-sm text-muted-foreground">
-                                                {session.centre?.name} ·{" "}
-                                                {session.subject?.name} ·{" "}
+                                                {session.centre?.name} ·{' '}
+                                                {session.subject?.name} ·{' '}
                                                 {session.class_group}
                                             </p>
                                             <p className="text-sm text-muted-foreground">
-                                                Teacher: {session.teacher?.name}{" "}
+                                                Teacher: {session.teacher?.name}{' '}
                                                 · Date: {session.session_date}
                                             </p>
                                         </div>
@@ -246,7 +255,8 @@ export default function AttendanceMonitoring({
                                         </p>
                                     ) : filteredRecords.length === 0 ? (
                                         <p className="py-4 text-sm text-muted-foreground">
-                                            No attendance records match the current search and filters.
+                                            No attendance records match the
+                                            current search and filters.
                                         </p>
                                     ) : (
                                         <div className="overflow-x-auto">
@@ -269,47 +279,49 @@ export default function AttendanceMonitoring({
                                                 </TableHeader>
 
                                                 <TableBody>
-                                                    {filteredRecords.map((record) => (
-                                                        <TableRow
-                                                            key={record.id}
-                                                        >
-                                                            <TableCell>
-                                                                {
-                                                                    record
-                                                                        .learner
-                                                                        ?.full_name
-                                                                }
-                                                            </TableCell>
-                                                            <TableCell>
-                                                                {
-                                                                    record
-                                                                        .learner
-                                                                        ?.learner_code
-                                                                }
-                                                            </TableCell>
-                                                            <TableCell>
-                                                                <span
-                                                                    className={
-                                                                        record.status ===
-                                                                        "Present"
-                                                                            ? "font-medium text-green-600"
-                                                                            : "font-medium text-red-600"
-                                                                    }
-                                                                >
+                                                    {filteredRecords.map(
+                                                        (record) => (
+                                                            <TableRow
+                                                                key={record.id}
+                                                            >
+                                                                <TableCell>
                                                                     {
-                                                                        record.status
+                                                                        record
+                                                                            .learner
+                                                                            ?.full_name
                                                                     }
-                                                                </span>
-                                                            </TableCell>
-                                                            <TableCell>
-                                                                {
-                                                                    record
-                                                                        .markedBy
-                                                                        ?.name
-                                                                }
-                                                            </TableCell>
-                                                        </TableRow>
-                                                    ))}
+                                                                </TableCell>
+                                                                <TableCell>
+                                                                    {
+                                                                        record
+                                                                            .learner
+                                                                            ?.learner_code
+                                                                    }
+                                                                </TableCell>
+                                                                <TableCell>
+                                                                    <span
+                                                                        className={
+                                                                            record.status ===
+                                                                            'Present'
+                                                                                ? 'font-medium text-green-600'
+                                                                                : 'font-medium text-red-600'
+                                                                        }
+                                                                    >
+                                                                        {
+                                                                            record.status
+                                                                        }
+                                                                    </span>
+                                                                </TableCell>
+                                                                <TableCell>
+                                                                    {
+                                                                        record
+                                                                            .markedBy
+                                                                            ?.name
+                                                                    }
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        ),
+                                                    )}
                                                 </TableBody>
                                             </Table>
                                         </div>

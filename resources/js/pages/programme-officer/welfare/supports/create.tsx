@@ -1,24 +1,24 @@
-import { Head, Link, useForm } from "@inertiajs/react";
-import { ArrowLeft, HeartHandshake } from "lucide-react";
+import { Head, Link, useForm } from '@inertiajs/react';
+import { ArrowLeft, HeartHandshake } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
 interface WelfareNeed {
     id: number;
@@ -38,10 +38,10 @@ interface CreateSupportProps {
 
 export default function CreateSupport({ welfareNeed }: CreateSupportProps) {
     const { data, setData, post, processing, errors } = useForm({
-        support_type: "",
-        description: "",
-        date_provided: new Date().toISOString().split("T")[0],
-        notes: "",
+        support_type: '',
+        description: '',
+        date_provided: new Date().toISOString().split('T')[0],
+        notes: '',
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -81,9 +81,9 @@ export default function CreateSupport({ welfareNeed }: CreateSupportProps) {
                             Support Information
                         </CardTitle>
                         <CardDescription>
-                            Recording support for{" "}
+                            Recording support for{' '}
                             {welfareNeed.learner.full_name} (
-                            {welfareNeed.learner.learner_code}) at{" "}
+                            {welfareNeed.learner.learner_code}) at{' '}
                             {welfareNeed.learner.centre.name}.
                         </CardDescription>
                     </CardHeader>
@@ -99,7 +99,7 @@ export default function CreateSupport({ welfareNeed }: CreateSupportProps) {
                                     <Select
                                         value={data.support_type}
                                         onValueChange={(value) =>
-                                            setData("support_type", value)
+                                            setData('support_type', value)
                                         }
                                     >
                                         <SelectTrigger id="support_type">
@@ -139,7 +139,7 @@ export default function CreateSupport({ welfareNeed }: CreateSupportProps) {
                                         value={data.description}
                                         onChange={(e) =>
                                             setData(
-                                                "description",
+                                                'description',
                                                 e.target.value,
                                             )
                                         }
@@ -162,7 +162,7 @@ export default function CreateSupport({ welfareNeed }: CreateSupportProps) {
                                         value={data.date_provided}
                                         onChange={(e) =>
                                             setData(
-                                                "date_provided",
+                                                'date_provided',
                                                 e.target.value,
                                             )
                                         }
@@ -185,7 +185,7 @@ export default function CreateSupport({ welfareNeed }: CreateSupportProps) {
                                         placeholder="Add any relevant notes..."
                                         value={data.notes}
                                         onChange={(e) =>
-                                            setData("notes", e.target.value)
+                                            setData('notes', e.target.value)
                                         }
                                     />
                                     {errors.notes && (
@@ -210,8 +210,8 @@ export default function CreateSupport({ welfareNeed }: CreateSupportProps) {
 
                                     <Button type="submit" disabled={processing}>
                                         {processing
-                                            ? "Saving..."
-                                            : "Record Support"}
+                                            ? 'Saving...'
+                                            : 'Record Support'}
                                     </Button>
                                 </div>
                             </form>

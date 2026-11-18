@@ -1,15 +1,15 @@
-import React from "react";
-import { Head, Link, useForm } from "@inertiajs/react";
-import { ArrowLeft, ClipboardList } from "lucide-react";
+import React from 'react';
+import { Head, Link, useForm } from '@inertiajs/react';
+import { ArrowLeft, ClipboardList } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 import {
     Table,
     TableBody,
@@ -17,18 +17,18 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/table';
+import { Input } from '@/components/ui/input';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
-import DataTableFilters from "@/components/data-table-filters";
+} from '@/components/ui/select';
+import DataTableFilters from '@/components/data-table-filters';
 
-import teacher from "@/routes/teacher";
+import teacher from '@/routes/teacher';
 
 interface Learner {
     id: number;
@@ -65,7 +65,7 @@ interface AssessmentShowProps {
     assessments: Record<string, AssessmentRecord[]>;
 }
 
-type AssessmentType = "Baseline" | "Midline" | "Endline";
+type AssessmentType = 'Baseline' | 'Midline' | 'Endline';
 
 interface LearnerAssessmentRowProps {
     learner: Learner;
@@ -80,8 +80,8 @@ export default function AssessmentShow({
     learners,
     assessments,
 }: AssessmentShowProps) {
-    const [search, setSearch] = React.useState("");
-    const [assessmentFilter, setAssessmentFilter] = React.useState("all");
+    const [search, setSearch] = React.useState('');
+    const [assessmentFilter, setAssessmentFilter] = React.useState('all');
     const filteredLearners = learners.filter((learner) => {
         const record = assessments[learner.id]?.[0];
         const hasScores = [
@@ -90,14 +90,13 @@ export default function AssessmentShow({
             record?.endline_score,
         ].some((score) => score !== null && score !== undefined);
         const matchesAssessment =
-            assessmentFilter === "all" ||
-            (assessmentFilter === "scored" && hasScores) ||
-            (assessmentFilter === "not-scored" && !hasScores);
+            assessmentFilter === 'all' ||
+            (assessmentFilter === 'scored' && hasScores) ||
+            (assessmentFilter === 'not-scored' && !hasScores);
         return (
             `${learner.full_name} ${learner.learner_code}`
                 .toLowerCase()
-                .includes(search.toLowerCase()) &&
-            matchesAssessment
+                .includes(search.toLowerCase()) && matchesAssessment
         );
     });
 
@@ -154,14 +153,20 @@ export default function AssessmentShow({
                             onSearchChange={setSearch}
                             filters={[
                                 {
-                                    key: "assessment-status",
-                                    label: "Assessment",
+                                    key: 'assessment-status',
+                                    label: 'Assessment',
                                     value: assessmentFilter,
                                     onChange: setAssessmentFilter,
                                     options: [
-                                        { label: "All learners", value: "all" },
-                                        { label: "Scores recorded", value: "scored" },
-                                        { label: "No scores recorded", value: "not-scored" },
+                                        { label: 'All learners', value: 'all' },
+                                        {
+                                            label: 'Scores recorded',
+                                            value: 'scored',
+                                        },
+                                        {
+                                            label: 'No scores recorded',
+                                            value: 'not-scored',
+                                        },
                                     ],
                                 },
                             ]}
@@ -180,7 +185,9 @@ export default function AssessmentShow({
                                             <TableHead>Baseline</TableHead>
                                             <TableHead>Midline</TableHead>
                                             <TableHead>Endline</TableHead>
-                                            <TableHead>Final Average %</TableHead>
+                                            <TableHead>
+                                                Final Average %
+                                            </TableHead>
                                             <TableHead>Grade</TableHead>
                                             <TableHead>Performance</TableHead>
                                             <TableHead>Actions</TableHead>
@@ -192,10 +199,14 @@ export default function AssessmentShow({
                                             <LearnerAssessmentRow
                                                 key={learner.id}
                                                 learner={learner}
-                                                record={assessments[learner.id]?.[0]}
+                                                record={
+                                                    assessments[learner.id]?.[0]
+                                                }
                                                 centreId={register.centre_id}
                                                 subjectId={register.subject_id}
-                                                classGroup={register.class_group}
+                                                classGroup={
+                                                    register.class_group
+                                                }
                                             />
                                         ))}
                                         {filteredLearners.length === 0 && (
@@ -204,7 +215,8 @@ export default function AssessmentShow({
                                                     colSpan={9}
                                                     className="py-8 text-center text-muted-foreground"
                                                 >
-                                                    No learners match the current search and filter.
+                                                    No learners match the
+                                                    current search and filter.
                                                 </TableCell>
                                             </TableRow>
                                         )}
@@ -227,7 +239,7 @@ function LearnerAssessmentRow({
     classGroup,
 }: LearnerAssessmentRowProps) {
     const [assessmentType, setAssessmentType] =
-        React.useState<AssessmentType>("Baseline");
+        React.useState<AssessmentType>('Baseline');
 
     const { data, setData, post, processing, errors } = useForm({
         centre_id: centreId,
@@ -235,7 +247,7 @@ function LearnerAssessmentRow({
         class_group: classGroup,
         learner_id: learner.id,
         assessment_type: assessmentType,
-        score: "",
+        score: '',
     });
 
     const handleAssessmentTypeChange = (value: AssessmentType) => {
@@ -247,7 +259,7 @@ function LearnerAssessmentRow({
             class_group: classGroup,
             learner_id: learner.id,
             assessment_type: value,
-            score: "",
+            score: '',
         });
     };
 
@@ -258,9 +270,9 @@ function LearnerAssessmentRow({
     };
 
     const currentScore =
-        assessmentType === "Baseline"
+        assessmentType === 'Baseline'
             ? record?.baseline_score
-            : assessmentType === "Midline"
+            : assessmentType === 'Midline'
               ? record?.midline_score
               : record?.endline_score;
 
@@ -268,21 +280,19 @@ function LearnerAssessmentRow({
         <TableRow>
             <TableCell>{learner.learner_code}</TableCell>
 
-            <TableCell className="font-medium">
-                {learner.full_name}
-            </TableCell>
+            <TableCell className="font-medium">{learner.full_name}</TableCell>
 
-            <TableCell>{record?.baseline_score ?? "—"}</TableCell>
+            <TableCell>{record?.baseline_score ?? '—'}</TableCell>
 
-            <TableCell>{record?.midline_score ?? "—"}</TableCell>
+            <TableCell>{record?.midline_score ?? '—'}</TableCell>
 
-            <TableCell>{record?.endline_score ?? "—"}</TableCell>
+            <TableCell>{record?.endline_score ?? '—'}</TableCell>
 
-            <TableCell>{record?.final_percentage ?? "—"}</TableCell>
+            <TableCell>{record?.final_percentage ?? '—'}</TableCell>
 
-            <TableCell>{record?.grade ?? "—"}</TableCell>
+            <TableCell>{record?.grade ?? '—'}</TableCell>
 
-            <TableCell>{record?.performance ?? "—"}</TableCell>
+            <TableCell>{record?.performance ?? '—'}</TableCell>
 
             <TableCell>
                 <form
@@ -298,15 +308,9 @@ function LearnerAssessmentRow({
                         </SelectTrigger>
 
                         <SelectContent>
-                            <SelectItem value="Baseline">
-                                Baseline
-                            </SelectItem>
-                            <SelectItem value="Midline">
-                                Midline
-                            </SelectItem>
-                            <SelectItem value="Endline">
-                                Endline
-                            </SelectItem>
+                            <SelectItem value="Baseline">Baseline</SelectItem>
+                            <SelectItem value="Midline">Midline</SelectItem>
+                            <SelectItem value="Endline">Endline</SelectItem>
                         </SelectContent>
                     </Select>
 
@@ -318,14 +322,14 @@ function LearnerAssessmentRow({
                         placeholder="Score"
                         value={data.score}
                         onChange={(event) =>
-                            setData("score", event.target.value)
+                            setData('score', event.target.value)
                         }
                         className="w-24"
                         required
                     />
 
                     <Button type="submit" size="sm" disabled={processing}>
-                        {processing ? "Saving..." : "Save"}
+                        {processing ? 'Saving...' : 'Save'}
                     </Button>
                 </form>
 

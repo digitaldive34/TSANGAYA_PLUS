@@ -4,14 +4,17 @@ import { Breadcrumbs } from '@/components/breadcrumbs';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import type { BreadcrumbItem as BreadcrumbItemType } from '@/types';
+import type {
+    BreadcrumbItem as BreadcrumbItemType,
+    SharedPageProps,
+} from '@/types';
 
 export function AppSidebarHeader({
     breadcrumbs = [],
 }: {
     breadcrumbs?: BreadcrumbItemType[];
 }) {
-    const page = usePage();
+    const page = usePage<SharedPageProps>();
     const { auth } = page.props;
     const showAdminActions =
         auth?.user?.role === 'Admin' &&

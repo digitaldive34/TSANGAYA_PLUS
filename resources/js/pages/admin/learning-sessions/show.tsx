@@ -1,22 +1,22 @@
-import { Head, Link } from "@inertiajs/react";
-import { ArrowLeft, CalendarDays, Pencil } from "lucide-react";
+import { Head, Link } from '@inertiajs/react';
+import { ArrowLeft, CalendarDays, Pencil } from 'lucide-react';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 
 interface LearningSession {
     id: number;
     class_group: string;
     topic: string;
     session_date: string;
-    status: "Scheduled" | "Delivered" | "Cancelled" | "Rescheduled";
+    status: 'Scheduled' | 'Delivered' | 'Cancelled' | 'Rescheduled';
     centre: {
         id: number;
         name: string;
@@ -34,16 +34,16 @@ interface LearningSession {
 interface LearningSessionShowProps {
     session: LearningSession;
 }
-function getStatusVariant(status: LearningSession["status"]) {
+function getStatusVariant(status: LearningSession['status']) {
     switch (status) {
-        case "Delivered":
-            return "default";
-        case "Cancelled":
-            return "destructive";
-        case "Rescheduled":
-            return "secondary";
+        case 'Delivered':
+            return 'default';
+        case 'Cancelled':
+            return 'destructive';
+        case 'Rescheduled':
+            return 'secondary';
         default:
-            return "outline";
+            return 'outline';
     }
 }
 

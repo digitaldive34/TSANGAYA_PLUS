@@ -1,18 +1,18 @@
-import { Head, Link } from "@inertiajs/react";
-import { useState } from "react";
-import { BookOpen, ClipboardList } from "lucide-react";
+import { Head, Link } from '@inertiajs/react';
+import { useState } from 'react';
+import { BookOpen, ClipboardList } from 'lucide-react';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
-import teacher from "@/routes/teacher";
-import DataTableFilters from "@/components/data-table-filters";
+} from '@/components/ui/card';
+import teacher from '@/routes/teacher';
+import DataTableFilters from '@/components/data-table-filters';
 
 interface AssessmentRegister {
     centre_id: number;
@@ -31,16 +31,15 @@ interface AssessmentIndexProps {
 }
 
 export default function AssessmentIndex({ registers }: AssessmentIndexProps) {
-    const [search, setSearch] = useState("");
-    const [classGroup, setClassGroup] = useState("all");
+    const [search, setSearch] = useState('');
+    const [classGroup, setClassGroup] = useState('all');
     const filteredRegisters = registers.filter((register) => {
-        const matchesSearch =
-            `${register.centre.name} ${register.subject.name}`
-                .toLowerCase()
-                .includes(search.toLowerCase());
+        const matchesSearch = `${register.centre.name} ${register.subject.name}`
+            .toLowerCase()
+            .includes(search.toLowerCase());
         return (
             matchesSearch &&
-            (classGroup === "all" || register.class_group === classGroup)
+            (classGroup === 'all' || register.class_group === classGroup)
         );
     });
 
@@ -66,14 +65,14 @@ export default function AssessmentIndex({ registers }: AssessmentIndexProps) {
                     onSearchChange={setSearch}
                     filters={[
                         {
-                            key: "class",
-                            label: "Class",
+                            key: 'class',
+                            label: 'Class',
                             value: classGroup,
                             onChange: setClassGroup,
                             options: [
-                                { label: "All classes", value: "all" },
-                                { label: "Class A", value: "Class A" },
-                                { label: "Class B", value: "Class B" },
+                                { label: 'All classes', value: 'all' },
+                                { label: 'Class A', value: 'Class A' },
+                                { label: 'Class B', value: 'Class B' },
                             ],
                         },
                     ]}
@@ -134,9 +133,9 @@ export default function AssessmentIndex({ registers }: AssessmentIndexProps) {
                             <ClipboardList className="mx-auto mb-4 h-10 w-10 text-muted-foreground" />
 
                             <h3 className="font-semibold">
-                                {search || classGroup !== "all"
-                                    ? "No matching assessment registers"
-                                    : "No assessment registers available"}
+                                {search || classGroup !== 'all'
+                                    ? 'No matching assessment registers'
+                                    : 'No assessment registers available'}
                             </h3>
 
                             <p className="mt-2 text-sm text-muted-foreground">

@@ -1,24 +1,18 @@
+import { Head, Link, useForm } from '@inertiajs/react';
+import { ArrowLeft, Building2 } from 'lucide-react';
 
-import { Head, Link, useForm } from "@inertiajs/react";
-import { ArrowLeft, Building2 } from "lucide-react";
-
-import InputError from "@/components/input-error";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
 interface Centre {
     id: number;
@@ -28,7 +22,7 @@ interface Centre {
     internet_availability: string | null;
     electricity_availability: string | null;
     technology_readiness: string | null;
-    status: "active" | "inactive";
+    status: 'active' | 'inactive';
 }
 
 interface Props {
@@ -39,10 +33,11 @@ export default function EditCentre({ centre }: Props) {
     const { data, setData, put, processing, errors } = useForm({
         name: centre.name,
         location: centre.location,
-        learner_population: centre.learner_population?.toString() ?? "",
-        internet_availability: centre.internet_availability ?? "Not Available",
-        electricity_availability: centre.electricity_availability ?? "Not Available",
-        technology_readiness: centre.technology_readiness ?? "Low",
+        learner_population: centre.learner_population?.toString() ?? '',
+        internet_availability: centre.internet_availability ?? 'Not Available',
+        electricity_availability:
+            centre.electricity_availability ?? 'Not Available',
+        technology_readiness: centre.technology_readiness ?? 'Low',
         status: centre.status,
     });
 
@@ -91,7 +86,9 @@ export default function EditCentre({ centre }: Props) {
                                 <Input
                                     id="name"
                                     value={data.name}
-                                    onChange={(e) => setData("name", e.target.value)}
+                                    onChange={(e) =>
+                                        setData('name', e.target.value)
+                                    }
                                     required
                                 />
                                 <InputError message={errors.name} />
@@ -102,7 +99,9 @@ export default function EditCentre({ centre }: Props) {
                                 <Input
                                     id="location"
                                     value={data.location}
-                                    onChange={(e) => setData("location", e.target.value)}
+                                    onChange={(e) =>
+                                        setData('location', e.target.value)
+                                    }
                                     required
                                 />
                                 <InputError message={errors.location} />
@@ -118,10 +117,15 @@ export default function EditCentre({ centre }: Props) {
                                     min="0"
                                     value={data.learner_population}
                                     onChange={(e) =>
-                                        setData("learner_population", e.target.value)
+                                        setData(
+                                            'learner_population',
+                                            e.target.value,
+                                        )
                                     }
                                 />
-                                <InputError message={errors.learner_population} />
+                                <InputError
+                                    message={errors.learner_population}
+                                />
                             </div>
                         </CardContent>
                     </Card>
@@ -137,16 +141,22 @@ export default function EditCentre({ centre }: Props) {
                                 <Select
                                     value={data.internet_availability}
                                     onValueChange={(value) =>
-                                        setData("internet_availability", value)
+                                        setData('internet_availability', value)
                                     }
                                 >
                                     <SelectTrigger>
                                         <SelectValue placeholder="Select availability" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="Available">Available</SelectItem>
-                                        <SelectItem value="Limited">Limited</SelectItem>
-                                        <SelectItem value="Not Available">Not Available</SelectItem>
+                                        <SelectItem value="Available">
+                                            Available
+                                        </SelectItem>
+                                        <SelectItem value="Limited">
+                                            Limited
+                                        </SelectItem>
+                                        <SelectItem value="Not Available">
+                                            Not Available
+                                        </SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -156,16 +166,25 @@ export default function EditCentre({ centre }: Props) {
                                 <Select
                                     value={data.electricity_availability}
                                     onValueChange={(value) =>
-                                        setData("electricity_availability", value)
+                                        setData(
+                                            'electricity_availability',
+                                            value,
+                                        )
                                     }
                                 >
                                     <SelectTrigger>
                                         <SelectValue placeholder="Select availability" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="Available">Available</SelectItem>
-                                        <SelectItem value="Limited">Limited</SelectItem>
-                                        <SelectItem value="Not Available">Not Available</SelectItem>
+                                        <SelectItem value="Available">
+                                            Available
+                                        </SelectItem>
+                                        <SelectItem value="Limited">
+                                            Limited
+                                        </SelectItem>
+                                        <SelectItem value="Not Available">
+                                            Not Available
+                                        </SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -175,15 +194,19 @@ export default function EditCentre({ centre }: Props) {
                                 <Select
                                     value={data.technology_readiness}
                                     onValueChange={(value) =>
-                                        setData("technology_readiness", value)
+                                        setData('technology_readiness', value)
                                     }
                                 >
                                     <SelectTrigger>
                                         <SelectValue placeholder="Select readiness level" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="High">High</SelectItem>
-                                        <SelectItem value="Medium">Medium</SelectItem>
+                                        <SelectItem value="High">
+                                            High
+                                        </SelectItem>
+                                        <SelectItem value="Medium">
+                                            Medium
+                                        </SelectItem>
                                         <SelectItem value="Low">Low</SelectItem>
                                     </SelectContent>
                                 </Select>
@@ -201,15 +224,22 @@ export default function EditCentre({ centre }: Props) {
                             <Select
                                 value={data.status}
                                 onValueChange={(value) =>
-                                    setData("status", value as "active" | "inactive")
+                                    setData(
+                                        'status',
+                                        value as 'active' | 'inactive',
+                                    )
                                 }
                             >
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select status" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="active">Active</SelectItem>
-                                    <SelectItem value="inactive">Inactive</SelectItem>
+                                    <SelectItem value="active">
+                                        Active
+                                    </SelectItem>
+                                    <SelectItem value="inactive">
+                                        Inactive
+                                    </SelectItem>
                                 </SelectContent>
                             </Select>
                         </CardContent>
@@ -223,7 +253,7 @@ export default function EditCentre({ centre }: Props) {
                         </Button>
 
                         <Button type="submit" disabled={processing}>
-                            {processing ? "Updating..." : "Update Centre"}
+                            {processing ? 'Updating...' : 'Update Centre'}
                         </Button>
                     </div>
                 </form>

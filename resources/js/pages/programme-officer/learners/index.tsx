@@ -1,11 +1,11 @@
-import { Head, Link, router } from "@inertiajs/react";
-import { useState } from "react";
-import { Users, MapPin, GraduationCap, Eye, Plus } from "lucide-react";
+import { Head, Link, router } from '@inertiajs/react';
+import { useState } from 'react';
+import { Users, MapPin, GraduationCap, Eye, Plus } from 'lucide-react';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import DataTableFilters from "@/components/data-table-filters";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import DataTableFilters from '@/components/data-table-filters';
 
 interface Centre {
     id: number;
@@ -17,8 +17,8 @@ interface Learner {
     learner_code: string;
     full_name: string;
     age: number | null;
-    class_group: "Class A" | "Class B";
-    status: "active" | "inactive";
+    class_group: 'Class A' | 'Class B';
+    status: 'active' | 'inactive';
     centre: Centre;
 }
 
@@ -50,28 +50,29 @@ export default function LearnersIndex({
 }: Props) {
     const [search, setSearch] = useState(filters.search);
     const [classFilter, setClassFilter] = useState(
-        filters.class_group || "all",
+        filters.class_group || 'all',
     );
-    const [statusFilter, setStatusFilter] = useState(filters.status || "all");
-    const [centreFilter, setCentreFilter] = useState(filters.centre_id || "all");
+    const [statusFilter, setStatusFilter] = useState(filters.status || 'all');
+    const [centreFilter, setCentreFilter] = useState(
+        filters.centre_id || 'all',
+    );
     const applyFilters = () =>
         router.get(
-            "/programme-officer/learners",
+            '/programme-officer/learners',
             {
                 search: search || undefined,
-                class_group:
-                    classFilter === "all" ? undefined : classFilter,
-                status: statusFilter === "all" ? undefined : statusFilter,
-                centre_id: centreFilter === "all" ? undefined : centreFilter,
+                class_group: classFilter === 'all' ? undefined : classFilter,
+                status: statusFilter === 'all' ? undefined : statusFilter,
+                centre_id: centreFilter === 'all' ? undefined : centreFilter,
             },
             { preserveState: true, preserveScroll: true },
         );
     const clearFilters = () => {
-        setSearch("");
-        setClassFilter("all");
-        setStatusFilter("all");
-        setCentreFilter("all");
-        router.get("/programme-officer/learners");
+        setSearch('');
+        setClassFilter('all');
+        setStatusFilter('all');
+        setCentreFilter('all');
+        router.get('/programme-officer/learners');
     };
 
     return (
@@ -81,7 +82,7 @@ export default function LearnersIndex({
             <div className="space-y-6 p-6">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                        <p className="text-xs py-2 font-small text-muted-foreground">
+                        <p className="font-small py-2 text-xs text-muted-foreground">
                             TSANGAYA+ / Programme Officer
                         </p>
 
@@ -132,34 +133,37 @@ export default function LearnersIndex({
                             onSearchChange={setSearch}
                             filters={[
                                 {
-                                    key: "class",
-                                    label: "Class",
+                                    key: 'class',
+                                    label: 'Class',
                                     value: classFilter,
                                     onChange: setClassFilter,
                                     options: [
-                                        { label: "All classes", value: "all" },
-                                        { label: "Class A", value: "Class A" },
-                                        { label: "Class B", value: "Class B" },
+                                        { label: 'All classes', value: 'all' },
+                                        { label: 'Class A', value: 'Class A' },
+                                        { label: 'Class B', value: 'Class B' },
                                     ],
                                 },
                                 {
-                                    key: "status",
-                                    label: "Status",
+                                    key: 'status',
+                                    label: 'Status',
                                     value: statusFilter,
                                     onChange: setStatusFilter,
                                     options: [
-                                        { label: "All statuses", value: "all" },
-                                        { label: "Active", value: "active" },
-                                        { label: "Inactive", value: "inactive" },
+                                        { label: 'All statuses', value: 'all' },
+                                        { label: 'Active', value: 'active' },
+                                        {
+                                            label: 'Inactive',
+                                            value: 'inactive',
+                                        },
                                     ],
                                 },
                                 {
-                                    key: "centre",
-                                    label: "Centre",
+                                    key: 'centre',
+                                    label: 'Centre',
                                     value: centreFilter,
                                     onChange: setCentreFilter,
                                     options: [
-                                        { label: "All centres", value: "all" },
+                                        { label: 'All centres', value: 'all' },
                                         ...centres.map((centre) => ({
                                             label: centre.name,
                                             value: String(centre.id),
@@ -177,11 +181,11 @@ export default function LearnersIndex({
 
                                 <h3 className="font-semibold">
                                     {search ||
-                                    classFilter !== "all" ||
-                                    statusFilter !== "all" ||
-                                    centreFilter !== "all"
-                                        ? "No matching learners found"
-                                        : "No learners registered yet"}
+                                    classFilter !== 'all' ||
+                                    statusFilter !== 'all' ||
+                                    centreFilter !== 'all'
+                                        ? 'No matching learners found'
+                                        : 'No learners registered yet'}
                                 </h3>
 
                                 <p className="mt-1 text-sm text-muted-foreground">
@@ -208,7 +212,7 @@ export default function LearnersIndex({
                                                 <span className="flex items-center gap-1">
                                                     <MapPin className="size-4" />
                                                     {learner.centre?.name ??
-                                                        "No centre"}
+                                                        'No centre'}
                                                 </span>
 
                                                 <span>
@@ -216,9 +220,9 @@ export default function LearnersIndex({
                                                 </span>
 
                                                 <span>
-                                                    Age:{" "}
+                                                    Age:{' '}
                                                     {learner.age ??
-                                                        "Not specified"}
+                                                        'Not specified'}
                                                 </span>
                                             </div>
                                         </div>
@@ -226,14 +230,14 @@ export default function LearnersIndex({
                                         <div className="flex items-center gap-3">
                                             <Badge
                                                 variant={
-                                                    learner.status === "active"
-                                                        ? "default"
-                                                        : "secondary"
+                                                    learner.status === 'active'
+                                                        ? 'default'
+                                                        : 'secondary'
                                                 }
                                             >
-                                                {learner.status === "active"
-                                                    ? "Active"
-                                                    : "Inactive"}
+                                                {learner.status === 'active'
+                                                    ? 'Active'
+                                                    : 'Inactive'}
                                             </Badge>
 
                                             <Button
@@ -259,7 +263,7 @@ export default function LearnersIndex({
                                 <Button
                                     key={index}
                                     variant={
-                                        link.active ? "default" : "outline"
+                                        link.active ? 'default' : 'outline'
                                     }
                                     size="sm"
                                     disabled={!link.url}

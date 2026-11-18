@@ -1,17 +1,17 @@
-import { Head, Link, useForm } from "@inertiajs/react";
-import { ArrowLeft, UserPlus } from "lucide-react";
-import { FormEvent } from "react";
+import { Head, Link, useForm } from '@inertiajs/react';
+import { ArrowLeft, UserPlus } from 'lucide-react';
+import { FormEvent } from 'react';
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 
 import {
     Select,
@@ -19,7 +19,7 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
 interface Role {
     id: number;
@@ -38,29 +38,29 @@ interface Props {
 
 export default function CreateUser({ roles, centres }: Props) {
     const { data, setData, post, processing, errors } = useForm({
-        name: "",
-        email: "",
-        phone: "",
-        gender: "",
-        role_id: "",
-        centre_id: "",
-        qualification: "",
-        password: "",
-        password_confirmation: "",
+        name: '',
+        email: '',
+        phone: '',
+        gender: '',
+        role_id: '',
+        centre_id: '',
+        qualification: '',
+        password: '',
+        password_confirmation: '',
         photo: null as File | null,
     });
 
     const selectedRole = roles.find((role) => String(role.id) === data.role_id);
 
-    const isTeacher = selectedRole?.name === "Teacher";
+    const isTeacher = selectedRole?.name === 'Teacher';
     const needsCentre =
-        selectedRole?.name === "Teacher" ||
-        selectedRole?.name === "Programme Officer";
+        selectedRole?.name === 'Teacher' ||
+        selectedRole?.name === 'Programme Officer';
 
     const submit = (event: FormEvent) => {
         event.preventDefault();
 
-        post("/admin/users", {
+        post('/admin/users', {
             forceFormData: true,
         });
     };
@@ -110,7 +110,7 @@ export default function CreateUser({ roles, centres }: Props) {
                                     accept="image/*"
                                     onChange={(event) =>
                                         setData(
-                                            "photo",
+                                            'photo',
                                             event.target.files?.[0] ?? null,
                                         )
                                     }
@@ -131,7 +131,7 @@ export default function CreateUser({ roles, centres }: Props) {
                                     id="name"
                                     value={data.name}
                                     onChange={(e) =>
-                                        setData("name", e.target.value)
+                                        setData('name', e.target.value)
                                     }
                                     placeholder="Enter full name"
                                 />
@@ -147,11 +147,11 @@ export default function CreateUser({ roles, centres }: Props) {
                                     Gender (Optional)
                                 </Label>
                                 <Select
-                                    value={data.gender || "none"}
+                                    value={data.gender || 'none'}
                                     onValueChange={(value) =>
                                         setData(
-                                            "gender",
-                                            value === "none" ? "" : value,
+                                            'gender',
+                                            value === 'none' ? '' : value,
                                         )
                                     }
                                 >
@@ -184,7 +184,7 @@ export default function CreateUser({ roles, centres }: Props) {
                                     type="email"
                                     value={data.email}
                                     onChange={(e) =>
-                                        setData("email", e.target.value)
+                                        setData('email', e.target.value)
                                     }
                                     placeholder="Enter email address"
                                 />
@@ -201,7 +201,7 @@ export default function CreateUser({ roles, centres }: Props) {
                                     id="phone"
                                     value={data.phone}
                                     onChange={(e) =>
-                                        setData("phone", e.target.value)
+                                        setData('phone', e.target.value)
                                     }
                                     placeholder="Enter phone number"
                                 />
@@ -232,8 +232,8 @@ export default function CreateUser({ roles, centres }: Props) {
                                         setData((previous) => ({
                                             ...previous,
                                             role_id: value,
-                                            centre_id: "",
-                                            qualification: "",
+                                            centre_id: '',
+                                            qualification: '',
                                         }));
                                     }}
                                 >
@@ -264,7 +264,7 @@ export default function CreateUser({ roles, centres }: Props) {
                                     <Select
                                         value={data.centre_id}
                                         onValueChange={(value) =>
-                                            setData("centre_id", value)
+                                            setData('centre_id', value)
                                         }
                                     >
                                         <SelectTrigger>
@@ -299,7 +299,7 @@ export default function CreateUser({ roles, centres }: Props) {
                                         value={data.qualification}
                                         onChange={(e) =>
                                             setData(
-                                                "qualification",
+                                                'qualification',
                                                 e.target.value,
                                             )
                                         }
@@ -331,7 +331,7 @@ export default function CreateUser({ roles, centres }: Props) {
                                     type="password"
                                     value={data.password}
                                     onChange={(e) =>
-                                        setData("password", e.target.value)
+                                        setData('password', e.target.value)
                                     }
                                 />
                                 {errors.password && (
@@ -351,7 +351,7 @@ export default function CreateUser({ roles, centres }: Props) {
                                     value={data.password_confirmation}
                                     onChange={(e) =>
                                         setData(
-                                            "password_confirmation",
+                                            'password_confirmation',
                                             e.target.value,
                                         )
                                     }
@@ -366,7 +366,7 @@ export default function CreateUser({ roles, centres }: Props) {
                         </Button>
 
                         <Button type="submit" disabled={processing}>
-                            {processing ? "Creating..." : "Create User"}
+                            {processing ? 'Creating...' : 'Create User'}
                         </Button>
                     </div>
                 </form>

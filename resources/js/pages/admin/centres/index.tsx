@@ -1,11 +1,11 @@
-import { Head, Link, router } from "@inertiajs/react";
-import { useState } from "react";
-import { MapPin, Users, Plus, Eye } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Head, Link, router } from '@inertiajs/react';
+import { useState } from 'react';
+import { MapPin, Users, Plus, Eye } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import DataTableFilters from "@/components/data-table-filters";
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import DataTableFilters from '@/components/data-table-filters';
 
 interface Centre {
     id: number;
@@ -15,7 +15,7 @@ interface Centre {
     internet_availability: string | null;
     electricity_availability: string | null;
     technology_readiness: string | null;
-    status: "active" | "inactive";
+    status: 'active' | 'inactive';
 }
 
 interface Props {
@@ -43,22 +43,22 @@ export default function CentresIndex({
     filters,
 }: Props) {
     const [search, setSearch] = useState(filters.search);
-    const [status, setStatus] = useState(filters.status || "all");
+    const [status, setStatus] = useState(filters.status || 'all');
 
     const applyFilters = () => {
         router.get(
-            "/admin/centres",
+            '/admin/centres',
             {
                 search: search || undefined,
-                status: status === "all" ? undefined : status,
+                status: status === 'all' ? undefined : status,
             },
             { preserveState: true, preserveScroll: true },
         );
     };
     const clearFilters = () => {
-        setSearch("");
-        setStatus("all");
-        router.get("/admin/centres");
+        setSearch('');
+        setStatus('all');
+        router.get('/admin/centres');
     };
 
     return (
@@ -68,7 +68,7 @@ export default function CentresIndex({
             <div className="space-y-6 p-6">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                        <p className="text-xs py-2 font-medium text-muted-foreground">
+                        <p className="py-2 text-xs font-medium text-muted-foreground">
                             TSANGAYA+
                         </p>
 
@@ -134,16 +134,16 @@ export default function CentresIndex({
                             onSearchChange={setSearch}
                             filters={[
                                 {
-                                    key: "status",
-                                    label: "Status",
+                                    key: 'status',
+                                    label: 'Status',
                                     value: status,
                                     onChange: setStatus,
                                     options: [
-                                        { label: "All statuses", value: "all" },
-                                        { label: "Active", value: "active" },
+                                        { label: 'All statuses', value: 'all' },
+                                        { label: 'Active', value: 'active' },
                                         {
-                                            label: "Inactive",
-                                            value: "inactive",
+                                            label: 'Inactive',
+                                            value: 'inactive',
                                         },
                                     ],
                                 },
@@ -156,15 +156,15 @@ export default function CentresIndex({
                                 <MapPin className="mx-auto mb-3 size-10 text-muted-foreground" />
 
                                 <h3 className="font-semibold">
-                                    {search || status !== "all"
-                                        ? "No matching centres found"
-                                        : "No centres registered yet"}
+                                    {search || status !== 'all'
+                                        ? 'No matching centres found'
+                                        : 'No centres registered yet'}
                                 </h3>
 
                                 <p className="mt-1 text-sm text-muted-foreground">
-                                    {search || status !== "all"
-                                        ? "Try searching with another name or location."
-                                        : "Registered Tsangaya centres will appear here."}
+                                    {search || status !== 'all'
+                                        ? 'Try searching with another name or location.'
+                                        : 'Registered Tsangaya centres will appear here.'}
                                 </p>
                             </div>
                         ) : (
@@ -188,7 +188,7 @@ export default function CentresIndex({
                                                 <span className="flex items-center gap-1">
                                                     <Users className="size-4" />
                                                     {centre.learner_population ??
-                                                        "Not specified"}{" "}
+                                                        'Not specified'}{' '}
                                                     learners
                                                 </span>
                                             </div>
@@ -197,14 +197,14 @@ export default function CentresIndex({
                                         <div className="flex items-center gap-3">
                                             <Badge
                                                 variant={
-                                                    centre.status === "active"
-                                                        ? "default"
-                                                        : "secondary"
+                                                    centre.status === 'active'
+                                                        ? 'default'
+                                                        : 'secondary'
                                                 }
                                             >
-                                                {centre.status === "active"
-                                                    ? "Active"
-                                                    : "Inactive"}
+                                                {centre.status === 'active'
+                                                    ? 'Active'
+                                                    : 'Inactive'}
                                             </Badge>
 
                                             <Button
@@ -230,7 +230,7 @@ export default function CentresIndex({
                                     <Button
                                         key={index}
                                         variant={
-                                            link.active ? "default" : "outline"
+                                            link.active ? 'default' : 'outline'
                                         }
                                         size="sm"
                                         disabled={!link.url}

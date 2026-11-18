@@ -22,10 +22,10 @@ export default function Profile() {
             <>
                 <Head title="Profile settings" />
                 <p role="alert">
-                    Your session has expired. Please{" "}
+                    Your session has expired. Please{' '}
                     <a href="/login" className="underline">
                         sign in
-                    </a>{" "}
+                    </a>{' '}
                     again to edit your profile.
                 </p>
             </>

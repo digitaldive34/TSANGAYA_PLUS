@@ -1,19 +1,19 @@
-import { Head, Link, useForm } from "@inertiajs/react";
-import { ArrowLeft, UserRoundPen } from "lucide-react";
+import { Head, Link, useForm } from '@inertiajs/react';
+import { ArrowLeft, UserRoundPen } from 'lucide-react';
 
-import InputError from "@/components/input-error";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import InputError from '@/components/input-error';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
 interface Learner {
     id: number;
@@ -38,7 +38,7 @@ interface EditLearnerProps {
 export default function EditLearner({ learner }: EditLearnerProps) {
     const { data, setData, put, processing, errors } = useForm({
         full_name: learner.full_name,
-        age: learner.age?.toString() ?? "",
+        age: learner.age?.toString() ?? '',
         class_group: learner.class_group,
         registration_date: learner.registration_date,
         status: learner.status,
@@ -95,7 +95,7 @@ export default function EditLearner({ learner }: EditLearnerProps) {
                                         id="full_name"
                                         value={data.full_name}
                                         onChange={(e) =>
-                                            setData("full_name", e.target.value)
+                                            setData('full_name', e.target.value)
                                         }
                                     />
                                     <InputError message={errors.full_name} />
@@ -110,7 +110,7 @@ export default function EditLearner({ learner }: EditLearnerProps) {
                                         max="15"
                                         value={data.age}
                                         onChange={(e) =>
-                                            setData("age", e.target.value)
+                                            setData('age', e.target.value)
                                         }
                                     />
                                     <InputError message={errors.age} />
@@ -138,7 +138,7 @@ export default function EditLearner({ learner }: EditLearnerProps) {
                                         value={data.registration_date}
                                         onChange={(e) =>
                                             setData(
-                                                "registration_date",
+                                                'registration_date',
                                                 e.target.value,
                                             )
                                         }
@@ -153,7 +153,7 @@ export default function EditLearner({ learner }: EditLearnerProps) {
                                     <Select
                                         value={data.consent_status}
                                         onValueChange={(value) =>
-                                            setData("consent_status", value)
+                                            setData('consent_status', value)
                                         }
                                     >
                                         <SelectTrigger>
@@ -181,7 +181,7 @@ export default function EditLearner({ learner }: EditLearnerProps) {
                                     <Select
                                         value={data.status}
                                         onValueChange={(value) =>
-                                            setData("status", value)
+                                            setData('status', value)
                                         }
                                     >
                                         <SelectTrigger>
@@ -211,8 +211,8 @@ export default function EditLearner({ learner }: EditLearnerProps) {
 
                                 <Button type="submit" disabled={processing}>
                                     {processing
-                                        ? "Saving Changes..."
-                                        : "Save Changes"}
+                                        ? 'Saving Changes...'
+                                        : 'Save Changes'}
                                 </Button>
                             </div>
                         </form>

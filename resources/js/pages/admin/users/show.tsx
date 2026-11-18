@@ -1,15 +1,15 @@
-import { Head, Link } from "@inertiajs/react";
-import { ArrowLeft, UserRound } from "lucide-react";
+import { Head, Link } from '@inertiajs/react';
+import { ArrowLeft, UserRound } from 'lucide-react';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 
 interface User {
     id: number;
@@ -34,12 +34,12 @@ interface Props {
 
 export default function UserShow({ user }: Props) {
     const details = [
-        { label: "Email address", value: user.email },
-        { label: "Phone number", value: user.phone },
-        { label: "Gender", value: user.gender },
-        { label: "Role", value: user.role?.name },
-        { label: "Assigned centre", value: user.centre?.name },
-        { label: "Qualification", value: user.qualification },
+        { label: 'Email address', value: user.email },
+        { label: 'Phone number', value: user.phone },
+        { label: 'Gender', value: user.gender },
+        { label: 'Role', value: user.role?.name },
+        { label: 'Assigned centre', value: user.centre?.name },
+        { label: 'Qualification', value: user.qualification },
     ];
 
     return (
@@ -84,7 +84,7 @@ export default function UserShow({ user }: Props) {
                                     {user.name}
                                 </h2>
                                 <p className="text-sm text-muted-foreground">
-                                    {user.role?.name ?? "No role assigned"}
+                                    {user.role?.name ?? 'No role assigned'}
                                 </p>
                             </div>
                         </div>
@@ -92,9 +92,9 @@ export default function UserShow({ user }: Props) {
                         <div className="flex items-center gap-3">
                             <Badge
                                 variant={
-                                    user.status === "active"
-                                        ? "default"
-                                        : "secondary"
+                                    user.status === 'active'
+                                        ? 'default'
+                                        : 'secondary'
                                 }
                             >
                                 {user.status}
@@ -123,7 +123,7 @@ export default function UserShow({ user }: Props) {
                                     {detail.label}
                                 </p>
                                 <p className="font-medium">
-                                    {detail.value || "Not provided"}
+                                    {detail.value || 'Not provided'}
                                 </p>
                             </div>
                         ))}

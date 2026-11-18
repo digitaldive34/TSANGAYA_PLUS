@@ -1,4 +1,4 @@
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link } from '@inertiajs/react';
 import {
     ArrowLeft,
     MapPin,
@@ -7,11 +7,11 @@ import {
     Zap,
     Laptop,
     GraduationCap,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface Teacher {
     id: number;
@@ -26,7 +26,7 @@ interface Centre {
     internet_availability: string | null;
     electricity_availability: string | null;
     technology_readiness: string | null;
-    status: "active" | "inactive";
+    status: 'active' | 'inactive';
     learners_count: number;
     users: Teacher[];
 }
@@ -50,7 +50,7 @@ export default function CentreShow({ centre, teachersCount }: Props) {
                     </Button>
 
                     <div>
-                        <p className="text-xs py-2 font-medium text-muted-foreground">
+                        <p className="py-2 text-xs font-medium text-muted-foreground">
                             TSANGAYA+ / Centre Management
                         </p>
                         <h1 className="text-2xl font-bold tracking-tight">
@@ -84,12 +84,12 @@ export default function CentreShow({ centre, teachersCount }: Props) {
 
                         <Badge
                             variant={
-                                centre.status === "active"
-                                    ? "default"
-                                    : "secondary"
+                                centre.status === 'active'
+                                    ? 'default'
+                                    : 'secondary'
                             }
                         >
-                            {centre.status === "active" ? "Active" : "Inactive"}
+                            {centre.status === 'active' ? 'Active' : 'Inactive'}
                         </Badge>
                     </CardContent>
                 </Card>
@@ -104,7 +104,7 @@ export default function CentreShow({ centre, teachersCount }: Props) {
                         </CardHeader>
                         <CardContent>
                             <p className="text-2xl font-bold">
-                                {centre.learner_population ?? "Not specified"}
+                                {centre.learner_population ?? 'Not specified'}
                             </p>
                         </CardContent>
                     </Card>
@@ -152,7 +152,7 @@ export default function CentreShow({ centre, teachersCount }: Props) {
                                 </p>
                                 <p className="font-medium">
                                     {centre.internet_availability ??
-                                        "Not specified"}
+                                        'Not specified'}
                                 </p>
                             </div>
                         </div>
@@ -165,7 +165,7 @@ export default function CentreShow({ centre, teachersCount }: Props) {
                                 </p>
                                 <p className="font-medium">
                                     {centre.electricity_availability ??
-                                        "Not specified"}
+                                        'Not specified'}
                                 </p>
                             </div>
                         </div>
@@ -178,7 +178,7 @@ export default function CentreShow({ centre, teachersCount }: Props) {
                                 </p>
                                 <p className="font-medium">
                                     {centre.technology_readiness ??
-                                        "Not specified"}
+                                        'Not specified'}
                                 </p>
                             </div>
                         </div>

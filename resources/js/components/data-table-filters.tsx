@@ -1,14 +1,14 @@
-import { Search } from "lucide-react";
+import { Search } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
 export interface DataTableFilter {
     key: string;
@@ -49,19 +49,14 @@ export default function DataTableFilters({
                         aria-label={searchPlaceholder}
                         placeholder={searchPlaceholder}
                         value={search}
-                        onChange={(event) =>
-                            onSearchChange(event.target.value)
-                        }
+                        onChange={(event) => onSearchChange(event.target.value)}
                         className="pl-9"
                     />
                 </div>
             </div>
 
             {filters.map((filter) => (
-                <div
-                    key={filter.key}
-                    className="min-w-40 space-y-1.5 lg:w-48"
-                >
+                <div key={filter.key} className="min-w-40 space-y-1.5 lg:w-48">
                     <span className="text-sm font-medium">{filter.label}</span>
                     <Select
                         value={filter.value}

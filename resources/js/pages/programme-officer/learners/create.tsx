@@ -1,18 +1,18 @@
-import { Head, Link, useForm } from "@inertiajs/react";
-import { ArrowLeft, UserPlus } from "lucide-react";
+import { Head, Link, useForm } from '@inertiajs/react';
+import { ArrowLeft, UserPlus } from 'lucide-react';
 
-import InputError from "@/components/input-error";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
 interface Centre {
     id: number;
@@ -25,18 +25,18 @@ interface CreateLearnerProps {
 
 export default function CreateLearner({ centres }: CreateLearnerProps) {
     const { data, setData, post, processing, errors } = useForm({
-        full_name: "",
-        age: "",
-        class_group: "",
-        centre_id: "",
-        registration_date: new Date().toISOString().split("T")[0],
-        consent_status: "Pending",
+        full_name: '',
+        age: '',
+        class_group: '',
+        centre_id: '',
+        registration_date: new Date().toISOString().split('T')[0],
+        consent_status: 'Pending',
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        post("/programme-officer/learners");
+        post('/programme-officer/learners');
     };
 
     return (
@@ -45,17 +45,22 @@ export default function CreateLearner({ centres }: CreateLearnerProps) {
 
             <div className="space-y-6" px-6>
                 <div className="flex items-center gap-3">
-                    <Button variant="outline" size="icon" asChild className="ml-6">
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        asChild
+                        className="ml-6"
+                    >
                         <Link href="/programme-officer/learners">
                             <ArrowLeft className="h-4 w-4" />
                         </Link>
                     </Button>
 
                     <div>
-                        <h1 className="text-2xl pt-2 font-bold tracking-tight">
+                        <h1 className="pt-2 text-2xl font-bold tracking-tight">
                             Register Learner
                         </h1>
-                        <p className="text-sm font-small text-muted-foreground">
+                        <p className="font-small text-sm text-muted-foreground">
                             Add a new learner to a registered Tsangaya centre.
                         </p>
                     </div>
@@ -78,7 +83,7 @@ export default function CreateLearner({ centres }: CreateLearnerProps) {
                                         id="full_name"
                                         value={data.full_name}
                                         onChange={(e) =>
-                                            setData("full_name", e.target.value)
+                                            setData('full_name', e.target.value)
                                         }
                                         placeholder="Enter learner's full name"
                                     />
@@ -94,7 +99,7 @@ export default function CreateLearner({ centres }: CreateLearnerProps) {
                                         max="15"
                                         value={data.age}
                                         onChange={(e) =>
-                                            setData("age", e.target.value)
+                                            setData('age', e.target.value)
                                         }
                                         placeholder="Enter learner's age"
                                     />
@@ -106,7 +111,7 @@ export default function CreateLearner({ centres }: CreateLearnerProps) {
                                     <Select
                                         value={data.class_group}
                                         onValueChange={(value) =>
-                                            setData("class_group", value)
+                                            setData('class_group', value)
                                         }
                                     >
                                         <SelectTrigger>
@@ -129,7 +134,7 @@ export default function CreateLearner({ centres }: CreateLearnerProps) {
                                     <Select
                                         value={data.centre_id}
                                         onValueChange={(value) =>
-                                            setData("centre_id", value)
+                                            setData('centre_id', value)
                                         }
                                     >
                                         <SelectTrigger>
@@ -159,7 +164,7 @@ export default function CreateLearner({ centres }: CreateLearnerProps) {
                                         value={data.registration_date}
                                         onChange={(e) =>
                                             setData(
-                                                "registration_date",
+                                                'registration_date',
                                                 e.target.value,
                                             )
                                         }
@@ -174,7 +179,7 @@ export default function CreateLearner({ centres }: CreateLearnerProps) {
                                     <Select
                                         value={data.consent_status}
                                         onValueChange={(value) =>
-                                            setData("consent_status", value)
+                                            setData('consent_status', value)
                                         }
                                     >
                                         <SelectTrigger>
@@ -207,8 +212,8 @@ export default function CreateLearner({ centres }: CreateLearnerProps) {
 
                                 <Button type="submit" disabled={processing}>
                                     {processing
-                                        ? "Registering..."
-                                        : "Register Learner"}
+                                        ? 'Registering...'
+                                        : 'Register Learner'}
                                 </Button>
                             </div>
                         </form>

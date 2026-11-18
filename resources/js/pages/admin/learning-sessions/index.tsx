@@ -1,16 +1,16 @@
-import { Head, Link, router } from "@inertiajs/react";
-import { useState } from "react";
-import { CalendarDays, Eye, Pencil, Plus } from "lucide-react";
+import { Head, Link, router } from '@inertiajs/react';
+import { useState } from 'react';
+import { CalendarDays, Eye, Pencil, Plus } from 'lucide-react';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 import {
     Table,
     TableBody,
@@ -18,15 +18,15 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
-import DataTableFilters from "@/components/data-table-filters";
+} from '@/components/ui/table';
+import DataTableFilters from '@/components/data-table-filters';
 
 interface LearningSession {
     id: number;
     class_group: string;
     topic: string;
     session_date: string;
-    status: "Scheduled" | "Delivered" | "Cancelled" | "Rescheduled";
+    status: 'Scheduled' | 'Delivered' | 'Cancelled' | 'Rescheduled';
     centre: {
         id: number;
         name: string;
@@ -60,16 +60,16 @@ interface LearningSessionsProps {
     };
 }
 
-function getStatusVariant(status: LearningSession["status"]) {
+function getStatusVariant(status: LearningSession['status']) {
     switch (status) {
-        case "Delivered":
-            return "default";
-        case "Cancelled":
-            return "destructive";
-        case "Rescheduled":
-            return "secondary";
+        case 'Delivered':
+            return 'default';
+        case 'Cancelled':
+            return 'destructive';
+        case 'Rescheduled':
+            return 'secondary';
         default:
-            return "outline";
+            return 'outline';
     }
 }
 
@@ -78,23 +78,23 @@ export default function LearningSessionsIndex({
     filters,
 }: LearningSessionsProps) {
     const [search, setSearch] = useState(filters.search);
-    const [status, setStatus] = useState(filters.status || "all");
-    const [classGroup, setClassGroup] = useState(filters.class_group || "all");
+    const [status, setStatus] = useState(filters.status || 'all');
+    const [classGroup, setClassGroup] = useState(filters.class_group || 'all');
     const applyFilters = () =>
         router.get(
-            "/admin/learning-sessions",
+            '/admin/learning-sessions',
             {
                 search: search || undefined,
-                status: status === "all" ? undefined : status,
-                class_group: classGroup === "all" ? undefined : classGroup,
+                status: status === 'all' ? undefined : status,
+                class_group: classGroup === 'all' ? undefined : classGroup,
             },
             { preserveState: true, preserveScroll: true },
         );
     const clearFilters = () => {
-        setSearch("");
-        setStatus("all");
-        setClassGroup("all");
-        router.get("/admin/learning-sessions");
+        setSearch('');
+        setStatus('all');
+        setClassGroup('all');
+        router.get('/admin/learning-sessions');
     };
 
     return (
@@ -137,27 +137,39 @@ export default function LearningSessionsIndex({
                             onSearchChange={setSearch}
                             filters={[
                                 {
-                                    key: "status",
-                                    label: "Status",
+                                    key: 'status',
+                                    label: 'Status',
                                     value: status,
                                     onChange: setStatus,
                                     options: [
-                                        { label: "All statuses", value: "all" },
-                                        { label: "Scheduled", value: "Scheduled" },
-                                        { label: "Delivered", value: "Delivered" },
-                                        { label: "Cancelled", value: "Cancelled" },
-                                        { label: "Rescheduled", value: "Rescheduled" },
+                                        { label: 'All statuses', value: 'all' },
+                                        {
+                                            label: 'Scheduled',
+                                            value: 'Scheduled',
+                                        },
+                                        {
+                                            label: 'Delivered',
+                                            value: 'Delivered',
+                                        },
+                                        {
+                                            label: 'Cancelled',
+                                            value: 'Cancelled',
+                                        },
+                                        {
+                                            label: 'Rescheduled',
+                                            value: 'Rescheduled',
+                                        },
                                     ],
                                 },
                                 {
-                                    key: "class",
-                                    label: "Class",
+                                    key: 'class',
+                                    label: 'Class',
                                     value: classGroup,
                                     onChange: setClassGroup,
                                     options: [
-                                        { label: "All classes", value: "all" },
-                                        { label: "Class A", value: "Class A" },
-                                        { label: "Class B", value: "Class B" },
+                                        { label: 'All classes', value: 'all' },
+                                        { label: 'Class A', value: 'Class A' },
+                                        { label: 'Class B', value: 'Class B' },
                                     ],
                                 },
                             ]}
@@ -268,8 +280,8 @@ export default function LearningSessionsIndex({
                                                 key={index}
                                                 variant={
                                                     link.active
-                                                        ? "default"
-                                                        : "outline"
+                                                        ? 'default'
+                                                        : 'outline'
                                                 }
                                                 size="sm"
                                                 disabled={!link.url}

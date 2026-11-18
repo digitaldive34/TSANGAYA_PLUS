@@ -1,6 +1,6 @@
-import { Link } from "@inertiajs/react";
-import { home } from "@/routes";
-import type { AuthLayoutProps } from "@/types";
+import { Link } from '@inertiajs/react';
+import { home } from '@/routes';
+import type { AuthLayoutProps } from '@/types';
 
 export default function AuthSimpleLayout({
     children,
@@ -37,7 +37,7 @@ export default function AuthSimpleLayout({
                         WELCOME TO TSANGAYA+
                     </p>
 
-                    <h2 className="mt-5 text-4xl font-bold leading-tight text-white xl:text-5xl">
+                    <h2 className="mt-5 text-4xl leading-tight font-bold text-white xl:text-5xl">
                         Making room for foundational learning.
                         <span className="block text-amber-500">
                             Alongside Quranic education.
@@ -45,8 +45,8 @@ export default function AuthSimpleLayout({
                     </h2>
 
                     <p className="mt-6 max-w-lg text-base leading-8 text-slate-300">
-                        A platform for coordinating basic literacy, numeracy
-                        and modern education within Tsangaya schedules, while
+                        A platform for coordinating basic literacy, numeracy and
+                        modern education within Tsangaya schedules, while
                         respecting Quranic learning.
                     </p>
                 </div>

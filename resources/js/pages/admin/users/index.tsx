@@ -1,15 +1,15 @@
-import { Head, Link, router } from "@inertiajs/react";
-import { useState } from "react";
-import { Plus, Eye, Users } from "lucide-react";
+import { Head, Link, router } from '@inertiajs/react';
+import { useState } from 'react';
+import { Plus, Eye, Users } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 
 import {
     Table,
@@ -18,8 +18,8 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
-import DataTableFilters from "@/components/data-table-filters";
+} from '@/components/ui/table';
+import DataTableFilters from '@/components/data-table-filters';
 
 interface User {
     id: number;
@@ -54,23 +54,23 @@ interface Props {
 
 export default function UsersIndex({ users, roles, filters }: Props) {
     const [search, setSearch] = useState(filters.search);
-    const [role, setRole] = useState(filters.role || "all");
-    const [status, setStatus] = useState(filters.status || "all");
+    const [role, setRole] = useState(filters.role || 'all');
+    const [status, setStatus] = useState(filters.status || 'all');
     const applyFilters = () =>
         router.get(
-            "/admin/users",
+            '/admin/users',
             {
                 search: search || undefined,
-                role: role === "all" ? undefined : role,
-                status: status === "all" ? undefined : status,
+                role: role === 'all' ? undefined : role,
+                status: status === 'all' ? undefined : status,
             },
             { preserveState: true, preserveScroll: true },
         );
     const clearFilters = () => {
-        setSearch("");
-        setRole("all");
-        setStatus("all");
-        router.get("/admin/users");
+        setSearch('');
+        setRole('all');
+        setStatus('all');
+        router.get('/admin/users');
     };
 
     return (
@@ -118,12 +118,15 @@ export default function UsersIndex({ users, roles, filters }: Props) {
                                 onSearchChange={setSearch}
                                 filters={[
                                     {
-                                        key: "role",
-                                        label: "Role",
+                                        key: 'role',
+                                        label: 'Role',
                                         value: role,
                                         onChange: setRole,
                                         options: [
-                                            { label: "All roles", value: "all" },
+                                            {
+                                                label: 'All roles',
+                                                value: 'all',
+                                            },
                                             ...roles.map((name) => ({
                                                 label: name,
                                                 value: name,
@@ -131,14 +134,23 @@ export default function UsersIndex({ users, roles, filters }: Props) {
                                         ],
                                     },
                                     {
-                                        key: "status",
-                                        label: "Status",
+                                        key: 'status',
+                                        label: 'Status',
                                         value: status,
                                         onChange: setStatus,
                                         options: [
-                                            { label: "All statuses", value: "all" },
-                                            { label: "Active", value: "active" },
-                                            { label: "Inactive", value: "inactive" },
+                                            {
+                                                label: 'All statuses',
+                                                value: 'all',
+                                            },
+                                            {
+                                                label: 'Active',
+                                                value: 'active',
+                                            },
+                                            {
+                                                label: 'Inactive',
+                                                value: 'inactive',
+                                            },
                                         ],
                                     },
                                 ]}
@@ -148,9 +160,9 @@ export default function UsersIndex({ users, roles, filters }: Props) {
                         </div>
                         {users.data.length === 0 ? (
                             <p className="py-8 text-center text-sm text-muted-foreground">
-                                {search || role !== "all" || status !== "all"
-                                    ? "No matching users found."
-                                    : "No users have been registered yet."}
+                                {search || role !== 'all' || status !== 'all'
+                                    ? 'No matching users found.'
+                                    : 'No users have been registered yet.'}
                             </p>
                         ) : (
                             <div className="overflow-x-auto rounded-md border">
@@ -183,15 +195,15 @@ export default function UsersIndex({ users, roles, filters }: Props) {
                                                     {user.role?.name}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {user.centre?.name ?? "—"}
+                                                    {user.centre?.name ?? '—'}
                                                 </TableCell>
                                                 <TableCell>
                                                     <span
                                                         className={
                                                             user.status ===
-                                                            "active"
-                                                                ? "font-medium text-green-600"
-                                                                : "font-medium text-destructive"
+                                                            'active'
+                                                                ? 'font-medium text-green-600'
+                                                                : 'font-medium text-destructive'
                                                         }
                                                     >
                                                         {user.status}
@@ -225,7 +237,7 @@ export default function UsersIndex({ users, roles, filters }: Props) {
                                 <Button
                                     key={index}
                                     variant={
-                                        link.active ? "default" : "outline"
+                                        link.active ? 'default' : 'outline'
                                     }
                                     size="sm"
                                     disabled={!link.url}

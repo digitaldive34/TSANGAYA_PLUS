@@ -1,23 +1,23 @@
-import { Head, Link, useForm } from "@inertiajs/react";
-import { ArrowLeft, HeartHandshake } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Head, Link, useForm } from '@inertiajs/react';
+import { ArrowLeft, HeartHandshake } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 
 interface Learner {
     id: number;
@@ -33,15 +33,15 @@ interface CreateWelfareProps {
 }
 export default function CreateWelfare({ learners }: CreateWelfareProps) {
     const { data, setData, post, processing, errors } = useForm({
-        learner_id: "",
-        category: "",
-        description: "",
-        identified_date: new Date().toISOString().split("T")[0],
+        learner_id: '',
+        category: '',
+        description: '',
+        identified_date: new Date().toISOString().split('T')[0],
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post("/programme-officer/welfare");
+        post('/programme-officer/welfare');
     };
 
     return (
@@ -88,7 +88,7 @@ export default function CreateWelfare({ learners }: CreateWelfareProps) {
                                     <Select
                                         value={data.learner_id}
                                         onValueChange={(value) =>
-                                            setData("learner_id", value)
+                                            setData('learner_id', value)
                                         }
                                     >
                                         <SelectTrigger id="learner_id">
@@ -101,7 +101,7 @@ export default function CreateWelfare({ learners }: CreateWelfareProps) {
                                                     value={String(learner.id)}
                                                 >
                                                     {learner.full_name} (
-                                                    {learner.learner_code}) —{" "}
+                                                    {learner.learner_code}) —{' '}
                                                     {learner.centre.name}
                                                 </SelectItem>
                                             ))}
@@ -122,7 +122,7 @@ export default function CreateWelfare({ learners }: CreateWelfareProps) {
                                     <Select
                                         value={data.category}
                                         onValueChange={(value) =>
-                                            setData("category", value)
+                                            setData('category', value)
                                         }
                                     >
                                         <SelectTrigger id="category">
@@ -162,7 +162,7 @@ export default function CreateWelfare({ learners }: CreateWelfareProps) {
                                         value={data.description}
                                         onChange={(e) =>
                                             setData(
-                                                "description",
+                                                'description',
                                                 e.target.value,
                                             )
                                         }
@@ -185,7 +185,7 @@ export default function CreateWelfare({ learners }: CreateWelfareProps) {
                                         value={data.identified_date}
                                         onChange={(e) =>
                                             setData(
-                                                "identified_date",
+                                                'identified_date',
                                                 e.target.value,
                                             )
                                         }
@@ -210,8 +210,8 @@ export default function CreateWelfare({ learners }: CreateWelfareProps) {
 
                                     <Button type="submit" disabled={processing}>
                                         {processing
-                                            ? "Saving..."
-                                            : "Record Welfare Need"}
+                                            ? 'Saving...'
+                                            : 'Record Welfare Need'}
                                     </Button>
                                 </div>
                             </form>

@@ -1,4 +1,4 @@
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link } from '@inertiajs/react';
 import {
     ArrowLeft,
     CalendarDays,
@@ -6,11 +6,11 @@ import {
     MapPin,
     User,
     UserRound,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface Learner {
     id: number;
@@ -39,12 +39,12 @@ interface LearnerShowProps {
 
 export default function ShowLearner({ learner }: LearnerShowProps) {
     const formatDate = (date: string | null) => {
-        if (!date) return "Not recorded";
+        if (!date) return 'Not recorded';
 
-        return new Date(`${date}T00:00:00`).toLocaleDateString("en-GB", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
+        return new Date(`${date}T00:00:00`).toLocaleDateString('en-GB', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
         });
     };
 
@@ -90,9 +90,9 @@ export default function ShowLearner({ learner }: LearnerShowProps) {
                         <div className="flex flex-wrap items-center gap-2">
                             <Badge
                                 variant={
-                                    learner.status === "active"
-                                        ? "default"
-                                        : "secondary"
+                                    learner.status === 'active'
+                                        ? 'default'
+                                        : 'secondary'
                                 }
                             >
                                 {learner.status}
@@ -137,7 +137,7 @@ export default function ShowLearner({ learner }: LearnerShowProps) {
                                     Age
                                 </p>
                                 <p className="font-medium">
-                                    {learner.age ?? "Not recorded"}
+                                    {learner.age ?? 'Not recorded'}
                                 </p>
                             </div>
 

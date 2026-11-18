@@ -820,4 +820,3 @@ The proposed Progressive Web Application and offline synchronisation capabilitie
 | Entrepreneurship and BD Lead | Habiba Abdulkarim Kwami | Pending review   |
 | Head Supervisor              | Bashir Hassan           | Pending approval |
 | Co-Supervisor                | Jerry Anjungu           | Pending approval |
-

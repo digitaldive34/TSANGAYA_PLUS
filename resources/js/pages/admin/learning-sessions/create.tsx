@@ -1,23 +1,23 @@
-import { Head, Link, useForm } from "@inertiajs/react";
-import { ArrowLeft } from "lucide-react";
+import { Head, Link, useForm } from '@inertiajs/react';
+import { ArrowLeft } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
 interface Centre {
     id: number;
@@ -54,18 +54,18 @@ export default function CreateLearningSession({
     teachers,
 }: CreateLearningSessionProps) {
     const { data, setData, post, processing, errors } = useForm({
-        centre_id: "",
-        subject_id: "",
-        teacher_id: "",
-        class_group: "",
-        topic: "",
+        centre_id: '',
+        subject_id: '',
+        teacher_id: '',
+        class_group: '',
+        topic: '',
         session_date: getLocalDateString(),
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        post("/admin/learning-sessions");
+        post('/admin/learning-sessions');
     };
 
     return (
@@ -110,7 +110,7 @@ export default function CreateLearningSession({
                                     <Select
                                         value={data.centre_id}
                                         onValueChange={(value) =>
-                                            setData("centre_id", value)
+                                            setData('centre_id', value)
                                         }
                                     >
                                         <SelectTrigger id="centre_id">
@@ -143,7 +143,7 @@ export default function CreateLearningSession({
                                     <Select
                                         value={data.subject_id}
                                         onValueChange={(value) =>
-                                            setData("subject_id", value)
+                                            setData('subject_id', value)
                                         }
                                     >
                                         <SelectTrigger id="subject_id">
@@ -178,7 +178,7 @@ export default function CreateLearningSession({
                                     <Select
                                         value={data.teacher_id}
                                         onValueChange={(value) =>
-                                            setData("teacher_id", value)
+                                            setData('teacher_id', value)
                                         }
                                     >
                                         <SelectTrigger id="teacher_id">
@@ -212,7 +212,7 @@ export default function CreateLearningSession({
                                     <Select
                                         value={data.class_group}
                                         onValueChange={(value) =>
-                                            setData("class_group", value)
+                                            setData('class_group', value)
                                         }
                                     >
                                         <SelectTrigger id="class_group">
@@ -244,7 +244,7 @@ export default function CreateLearningSession({
                                         id="topic"
                                         value={data.topic}
                                         onChange={(e) =>
-                                            setData("topic", e.target.value)
+                                            setData('topic', e.target.value)
                                         }
                                         placeholder="Enter the topic for this session"
                                         required
@@ -268,7 +268,7 @@ export default function CreateLearningSession({
                                         value={data.session_date}
                                         onChange={(e) =>
                                             setData(
-                                                "session_date",
+                                                'session_date',
                                                 e.target.value,
                                             )
                                         }
@@ -294,8 +294,8 @@ export default function CreateLearningSession({
 
                                     <Button type="submit" disabled={processing}>
                                         {processing
-                                            ? "Creating..."
-                                            : "Create Session"}
+                                            ? 'Creating...'
+                                            : 'Create Session'}
                                     </Button>
                                 </div>
                             </form>

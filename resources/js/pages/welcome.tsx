@@ -1,13 +1,13 @@
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link } from '@inertiajs/react';
 import {
     ArrowRight,
     Menu,
     BookOpen,
     ClipboardCheck,
     GraduationCap,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
     Sheet,
     SheetContent,
@@ -15,7 +15,7 @@ import {
     SheetTitle,
     SheetTrigger,
     SheetClose,
-} from "@/components/ui/sheet";
+} from '@/components/ui/sheet';
 
 export default function Welcome() {
     return (
@@ -98,15 +98,15 @@ export default function Welcome() {
 
                                     <nav className="mt-8 flex flex-col gap-6">
                                         {[
-                                            { label: "Home", href: "#home" },
-                                            { label: "About", href: "#about" },
+                                            { label: 'Home', href: '#home' },
+                                            { label: 'About', href: '#about' },
                                             {
-                                                label: "What We Do",
-                                                href: "#support",
+                                                label: 'What We Do',
+                                                href: '#support',
                                             },
                                             {
-                                                label: "How It Works",
-                                                href: "#how-it-works",
+                                                label: 'How It Works',
+                                                href: '#how-it-works',
                                             },
                                         ].map((item) => (
                                             <SheetClose asChild key={item.href}>
@@ -211,7 +211,7 @@ export default function Welcome() {
                                     ABOUT TSANGAYA+
                                 </p>
 
-                                <h2 className="mt-4 text-3xl font-bold leading-tight tracking-tight text-slate-900 sm:text-4xl">
+                                <h2 className="mt-4 text-3xl leading-tight font-bold tracking-tight text-slate-900 sm:text-4xl">
                                     Foundational learning alongside Quranic
                                     education.
                                 </h2>
@@ -254,22 +254,22 @@ export default function Welcome() {
                                 <div className="mt-8 space-y-6">
                                     {[
                                         {
-                                            number: "01",
-                                            title: "Thoughtful scheduling",
+                                            number: '01',
+                                            title: 'Thoughtful scheduling',
                                             description:
-                                                "Coordinate basic education sessions with existing Tsangaya and Quranic learning.",
+                                                'Coordinate basic education sessions with existing Tsangaya and Quranic learning.',
                                         },
                                         {
-                                            number: "02",
-                                            title: "Foundational skills",
+                                            number: '02',
+                                            title: 'Foundational skills',
                                             description:
-                                                "Make space for literacy, numeracy and other essential modern learning.",
+                                                'Make space for literacy, numeracy and other essential modern learning.',
                                         },
                                         {
-                                            number: "03",
-                                            title: "Wider access",
+                                            number: '03',
+                                            title: 'Wider access',
                                             description:
-                                                "Support efforts to reach children who are out of school with a pathway to learning.",
+                                                'Support efforts to reach children who are out of school with a pathway to learning.',
                                         },
                                     ].map((item) => (
                                         <div
@@ -410,22 +410,22 @@ export default function Welcome() {
                             <div className="mt-14 grid gap-8 md:grid-cols-3">
                                 {[
                                     {
-                                        number: "01",
-                                        title: "Administration",
+                                        number: '01',
+                                        title: 'Administration',
                                         description:
-                                            "Administrators plan and assign foundational learning sessions around the Tsangaya schedule.",
+                                            'Administrators plan and assign foundational learning sessions around the Tsangaya schedule.',
                                     },
                                     {
-                                        number: "02",
-                                        title: "Learner Support",
+                                        number: '02',
+                                        title: 'Learner Support',
                                         description:
-                                            "Programme officers maintain learner records and help identify children who may benefit from access to the programme.",
+                                            'Programme officers maintain learner records and help identify children who may benefit from access to the programme.',
                                     },
                                     {
-                                        number: "03",
-                                        title: "Teaching & Monitoring",
+                                        number: '03',
+                                        title: 'Teaching & Monitoring',
                                         description:
-                                            "Teachers deliver literacy, numeracy and other planned lessons, and record attendance and progress.",
+                                            'Teachers deliver literacy, numeracy and other planned lessons, and record attendance and progress.',
                                     },
                                 ].map((step) => (
                                     <Card
@@ -471,7 +471,7 @@ export default function Welcome() {
                                         OUR INTENDED IMPACT
                                     </p>
 
-                                    <h2 className="mt-4 text-3xl font-bold leading-tight tracking-tight text-slate-900 sm:text-4xl">
+                                    <h2 className="mt-4 text-3xl leading-tight font-bold tracking-tight text-slate-900 sm:text-4xl">
                                         Making foundational learning reachable
                                         through Tsangaya.
                                     </h2>
@@ -504,7 +504,7 @@ export default function Welcome() {
                                         <p className="text-sm font-medium text-amber-400">
                                             OUR VISION
                                         </p>
-                                        <h3 className="mt-3 text-2xl font-semibold leading-relaxed">
+                                        <h3 className="mt-3 text-2xl leading-relaxed font-semibold">
                                             Foundational literacy and numeracy,
                                             scheduled alongside respected
                                             Quranic education.
@@ -542,7 +542,7 @@ export default function Welcome() {
                                 BE PART OF THE JOURNEY
                             </p>
 
-                            <h2 className="mt-4 text-3xl font-bold leading-tight text-white sm:text-4xl">
+                            <h2 className="mt-4 text-3xl leading-tight font-bold text-white sm:text-4xl">
                                 Foundational learning, in harmony with Quranic
                                 education.
                             </h2>

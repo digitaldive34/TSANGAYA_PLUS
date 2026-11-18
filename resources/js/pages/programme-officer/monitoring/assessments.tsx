@@ -1,6 +1,6 @@
-import { Head, router } from "@inertiajs/react";
-import { useState } from "react";
-import { ClipboardList } from "lucide-react";
+import { Head, router } from '@inertiajs/react';
+import { useState } from 'react';
+import { ClipboardList } from 'lucide-react';
 
 import {
     Card,
@@ -8,7 +8,7 @@ import {
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 
 import {
     Table,
@@ -17,8 +17,8 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
-import DataTableFilters from "@/components/data-table-filters";
+} from '@/components/ui/table';
+import DataTableFilters from '@/components/data-table-filters';
 
 interface Centre {
     id: number;
@@ -68,27 +68,27 @@ export default function AssessmentMonitoring({
     records,
     filters,
 }: Props) {
-    const [search, setSearch] = useState(filters.search ?? "");
-    const [centreId, setCentreId] = useState(filters.centre_id ?? "all");
-    const [subjectId, setSubjectId] = useState(filters.subject_id ?? "all");
-    const [classGroup, setClassGroup] = useState(filters.class_group ?? "all");
+    const [search, setSearch] = useState(filters.search ?? '');
+    const [centreId, setCentreId] = useState(filters.centre_id ?? 'all');
+    const [subjectId, setSubjectId] = useState(filters.subject_id ?? 'all');
+    const [classGroup, setClassGroup] = useState(filters.class_group ?? 'all');
     const applyFilters = () =>
         router.get(
-            "/programme-officer/monitoring/assessments",
+            '/programme-officer/monitoring/assessments',
             {
                 search: search || undefined,
-                centre_id: centreId === "all" ? undefined : centreId,
-                subject_id: subjectId === "all" ? undefined : subjectId,
-                class_group: classGroup === "all" ? undefined : classGroup,
+                centre_id: centreId === 'all' ? undefined : centreId,
+                subject_id: subjectId === 'all' ? undefined : subjectId,
+                class_group: classGroup === 'all' ? undefined : classGroup,
             },
             { preserveState: true, preserveScroll: true },
         );
     const clearFilters = () => {
-        setSearch("");
-        setCentreId("all");
-        setSubjectId("all");
-        setClassGroup("all");
-        router.get("/programme-officer/monitoring/assessments");
+        setSearch('');
+        setCentreId('all');
+        setSubjectId('all');
+        setClassGroup('all');
+        router.get('/programme-officer/monitoring/assessments');
     };
 
     return (
@@ -129,12 +129,12 @@ export default function AssessmentMonitoring({
                             onSearchChange={setSearch}
                             filters={[
                                 {
-                                    key: "centre",
-                                    label: "Centre",
+                                    key: 'centre',
+                                    label: 'Centre',
                                     value: centreId,
                                     onChange: setCentreId,
                                     options: [
-                                        { label: "All centres", value: "all" },
+                                        { label: 'All centres', value: 'all' },
                                         ...centres.map((centre) => ({
                                             label: centre.name,
                                             value: String(centre.id),
@@ -142,12 +142,12 @@ export default function AssessmentMonitoring({
                                     ],
                                 },
                                 {
-                                    key: "subject",
-                                    label: "Subject",
+                                    key: 'subject',
+                                    label: 'Subject',
                                     value: subjectId,
                                     onChange: setSubjectId,
                                     options: [
-                                        { label: "All subjects", value: "all" },
+                                        { label: 'All subjects', value: 'all' },
                                         ...subjects.map((subject) => ({
                                             label: subject.name,
                                             value: String(subject.id),
@@ -155,14 +155,14 @@ export default function AssessmentMonitoring({
                                     ],
                                 },
                                 {
-                                    key: "class",
-                                    label: "Class",
+                                    key: 'class',
+                                    label: 'Class',
                                     value: classGroup,
                                     onChange: setClassGroup,
                                     options: [
-                                        { label: "All classes", value: "all" },
-                                        { label: "Class A", value: "Class A" },
-                                        { label: "Class B", value: "Class B" },
+                                        { label: 'All classes', value: 'all' },
+                                        { label: 'Class A', value: 'Class A' },
+                                        { label: 'Class B', value: 'Class B' },
                                     ],
                                 },
                             ]}
@@ -185,7 +185,9 @@ export default function AssessmentMonitoring({
                                             <TableHead>Baseline</TableHead>
                                             <TableHead>Midline</TableHead>
                                             <TableHead>Endline</TableHead>
-                                            <TableHead>Final Average %</TableHead>
+                                            <TableHead>
+                                                Final Average %
+                                            </TableHead>
                                             <TableHead>Grade</TableHead>
                                             <TableHead>Performance</TableHead>
                                         </TableRow>
@@ -198,7 +200,10 @@ export default function AssessmentMonitoring({
                                                     {record.learner?.name}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {record.learner?.centre?.name}
+                                                    {
+                                                        record.learner?.centre
+                                                            ?.name
+                                                    }
                                                 </TableCell>
                                                 <TableCell>
                                                     {record.subject?.name}
@@ -207,24 +212,28 @@ export default function AssessmentMonitoring({
                                                     {record.class_group}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {record.baseline_score ?? "—"}
+                                                    {record.baseline_score ??
+                                                        '—'}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {record.midline_score ?? "—"}
+                                                    {record.midline_score ??
+                                                        '—'}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {record.endline_score ?? "—"}
+                                                    {record.endline_score ??
+                                                        '—'}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {record.final_percentage !== null
+                                                    {record.final_percentage !==
+                                                    null
                                                         ? `${record.final_percentage}%`
-                                                        : "—"}
+                                                        : '—'}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {record.grade ?? "—"}
+                                                    {record.grade ?? '—'}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {record.performance ?? "—"}
+                                                    {record.performance ?? '—'}
                                                 </TableCell>
                                             </TableRow>
                                         ))}

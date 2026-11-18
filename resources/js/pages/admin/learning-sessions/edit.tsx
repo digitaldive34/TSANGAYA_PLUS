@@ -1,23 +1,23 @@
-import { Head, Link, useForm } from "@inertiajs/react";
-import { ArrowLeft, CalendarDays } from "lucide-react";
+import { Head, Link, useForm } from '@inertiajs/react';
+import { ArrowLeft, CalendarDays } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
 interface Centre {
     id: number;
@@ -43,7 +43,7 @@ interface LearningSession {
     class_group: string;
     topic: string;
     session_date: string;
-    status: "Scheduled" | "Delivered" | "Cancelled" | "Rescheduled";
+    status: 'Scheduled' | 'Delivered' | 'Cancelled' | 'Rescheduled';
 }
 
 interface EditLearningSessionProps {
@@ -120,7 +120,7 @@ export default function EditLearningSession({
                                     <Select
                                         value={data.centre_id}
                                         onValueChange={(value) =>
-                                            setData("centre_id", value)
+                                            setData('centre_id', value)
                                         }
                                     >
                                         <SelectTrigger id="centre_id">
@@ -152,7 +152,7 @@ export default function EditLearningSession({
                                     <Select
                                         value={data.subject_id}
                                         onValueChange={(value) =>
-                                            setData("subject_id", value)
+                                            setData('subject_id', value)
                                         }
                                     >
                                         <SelectTrigger id="subject_id">
@@ -186,7 +186,7 @@ export default function EditLearningSession({
                                     <Select
                                         value={data.teacher_id}
                                         onValueChange={(value) =>
-                                            setData("teacher_id", value)
+                                            setData('teacher_id', value)
                                         }
                                     >
                                         <SelectTrigger id="teacher_id">
@@ -220,7 +220,7 @@ export default function EditLearningSession({
                                     <Select
                                         value={data.class_group}
                                         onValueChange={(value) =>
-                                            setData("class_group", value)
+                                            setData('class_group', value)
                                         }
                                     >
                                         <SelectTrigger id="class_group">
@@ -253,7 +253,7 @@ export default function EditLearningSession({
                                         id="topic"
                                         value={data.topic}
                                         onChange={(e) =>
-                                            setData("topic", e.target.value)
+                                            setData('topic', e.target.value)
                                         }
                                         placeholder="Enter the topic for this session"
                                     />
@@ -276,7 +276,7 @@ export default function EditLearningSession({
                                         value={data.session_date}
                                         onChange={(e) =>
                                             setData(
-                                                "session_date",
+                                                'session_date',
                                                 e.target.value,
                                             )
                                         }
@@ -298,7 +298,7 @@ export default function EditLearningSession({
                                         value={data.status}
                                         onValueChange={(value) =>
                                             setData(
-                                                "status",
+                                                'status',
                                                 value as typeof data.status,
                                             )
                                         }
@@ -344,8 +344,8 @@ export default function EditLearningSession({
 
                                     <Button type="submit" disabled={processing}>
                                         {processing
-                                            ? "Saving Changes..."
-                                            : "Save Changes"}
+                                            ? 'Saving Changes...'
+                                            : 'Save Changes'}
                                     </Button>
                                 </div>
                             </form>

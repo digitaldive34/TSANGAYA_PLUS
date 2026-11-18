@@ -1,22 +1,22 @@
-import { Head, Link, router } from "@inertiajs/react";
-import { useMemo, useState } from "react";
+import { Head, Link, router } from '@inertiajs/react';
+import { useMemo, useState } from 'react';
 import {
     ArrowLeft,
     CalendarDays,
     ClipboardCheck,
     UserRound,
     CheckCircle,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 import {
     Table,
     TableBody,
@@ -24,10 +24,10 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
-import DataTableFilters from "@/components/data-table-filters";
+} from '@/components/ui/table';
+import DataTableFilters from '@/components/data-table-filters';
 
-import teacher from "@/routes/teacher";
+import teacher from '@/routes/teacher';
 
 interface LearningSession {
     id: number;
@@ -60,8 +60,8 @@ interface SessionShowProps {
 }
 
 export default function TeacherSessionShow({ session }: SessionShowProps) {
-    const [search, setSearch] = useState("");
-    const [attendanceStatus, setAttendanceStatus] = useState("all");
+    const [search, setSearch] = useState('');
+    const [attendanceStatus, setAttendanceStatus] = useState('all');
     const filteredAttendance = useMemo(
         () =>
             session.attendances.filter((attendance) => {
@@ -70,7 +70,7 @@ export default function TeacherSessionShow({ session }: SessionShowProps) {
                         .toLowerCase()
                         .includes(search.toLowerCase());
                 const matchesStatus =
-                    attendanceStatus === "all" ||
+                    attendanceStatus === 'all' ||
                     attendance.status === attendanceStatus;
                 return matchesSearch && matchesStatus;
             }),
@@ -78,13 +78,13 @@ export default function TeacherSessionShow({ session }: SessionShowProps) {
     );
 
     const statusVariant =
-        session.status === "Delivered"
-            ? "default"
-            : session.status === "Cancelled"
-              ? "destructive"
-              : session.status === "Rescheduled"
-                ? "secondary"
-                : "outline";
+        session.status === 'Delivered'
+            ? 'default'
+            : session.status === 'Cancelled'
+              ? 'destructive'
+              : session.status === 'Rescheduled'
+                ? 'secondary'
+                : 'outline';
 
     const hasAttendance = session.attendances.length > 0;
 
@@ -193,17 +193,20 @@ export default function TeacherSessionShow({ session }: SessionShowProps) {
                     <CardContent>
                         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                             <p className="text-sm text-muted-foreground">
-                                Showing {filteredAttendance.length} of{" "}
-                                {session.attendances.length} attendance record(s).
+                                Showing {filteredAttendance.length} of{' '}
+                                {session.attendances.length} attendance
+                                record(s).
                             </p>
 
-                            {session.status === "Scheduled" && (
+                            {session.status === 'Scheduled' && (
                                 <div className="flex flex-wrap gap-2">
                                     <Button asChild>
                                         <Link
-                                            href={teacher.sessions.attendance.create({
-                                                learningSession: session.id,
-                                            })}
+                                            href={teacher.sessions.attendance.create(
+                                                {
+                                                    learningSession: session.id,
+                                                },
+                                            )}
                                         >
                                             <ClipboardCheck className="mr-2 h-4 w-4" />
                                             Record Attendance
@@ -241,14 +244,23 @@ export default function TeacherSessionShow({ session }: SessionShowProps) {
                                         onSearchChange={setSearch}
                                         filters={[
                                             {
-                                                key: "attendance-status",
-                                                label: "Attendance",
+                                                key: 'attendance-status',
+                                                label: 'Attendance',
                                                 value: attendanceStatus,
                                                 onChange: setAttendanceStatus,
                                                 options: [
-                                                    { label: "All statuses", value: "all" },
-                                                    { label: "Present", value: "Present" },
-                                                    { label: "Absent", value: "Absent" },
+                                                    {
+                                                        label: 'All statuses',
+                                                        value: 'all',
+                                                    },
+                                                    {
+                                                        label: 'Present',
+                                                        value: 'Present',
+                                                    },
+                                                    {
+                                                        label: 'Absent',
+                                                        value: 'Absent',
+                                                    },
                                                 ],
                                             },
                                         ]}
@@ -257,53 +269,64 @@ export default function TeacherSessionShow({ session }: SessionShowProps) {
 
                                 {filteredAttendance.length === 0 ? (
                                     <p className="py-6 text-center text-sm text-muted-foreground">
-                                        No attendance records match the current search and filter.
+                                        No attendance records match the current
+                                        search and filter.
                                     </p>
                                 ) : (
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead>Learner Name</TableHead>
-                                            <TableHead>Learner Code</TableHead>
-                                            <TableHead>Status</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead>
+                                                    Learner Name
+                                                </TableHead>
+                                                <TableHead>
+                                                    Learner Code
+                                                </TableHead>
+                                                <TableHead>Status</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
 
-                                    <TableBody>
-                                        {filteredAttendance.map(
-                                            (attendance) => (
-                                                <TableRow key={attendance.id}>
-                                                    <TableCell className="font-medium">
-                                                        {
-                                                            attendance.learner
-                                                                .full_name
-                                                        }
-                                                    </TableCell>
-
-                                                    <TableCell>
-                                                        {
-                                                            attendance.learner
-                                                                .learner_code
-                                                        }
-                                                    </TableCell>
-
-                                                    <TableCell>
-                                                        <Badge
-                                                            variant={
-                                                                attendance.status ===
-                                                                "Present"
-                                                                    ? "default"
-                                                                    : "destructive"
+                                        <TableBody>
+                                            {filteredAttendance.map(
+                                                (attendance) => (
+                                                    <TableRow
+                                                        key={attendance.id}
+                                                    >
+                                                        <TableCell className="font-medium">
+                                                            {
+                                                                attendance
+                                                                    .learner
+                                                                    .full_name
                                                             }
-                                                        >
-                                                            {attendance.status}
-                                                        </Badge>
-                                                    </TableCell>
-                                                </TableRow>
-                                            ),
-                                        )}
-                                    </TableBody>
-                                </Table>
+                                                        </TableCell>
+
+                                                        <TableCell>
+                                                            {
+                                                                attendance
+                                                                    .learner
+                                                                    .learner_code
+                                                            }
+                                                        </TableCell>
+
+                                                        <TableCell>
+                                                            <Badge
+                                                                variant={
+                                                                    attendance.status ===
+                                                                    'Present'
+                                                                        ? 'default'
+                                                                        : 'destructive'
+                                                                }
+                                                            >
+                                                                {
+                                                                    attendance.status
+                                                                }
+                                                            </Badge>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ),
+                                            )}
+                                        </TableBody>
+                                    </Table>
                                 )}
                             </div>
                         )}

@@ -1,28 +1,28 @@
-import { Head, Link, router } from "@inertiajs/react";
+import { Head, Link, router } from '@inertiajs/react';
 import {
     ArrowLeft,
     CalendarDays,
     HeartHandshake,
     MapPin,
     UserRound,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
 interface WelfareSupport {
     id: number;
@@ -62,11 +62,11 @@ interface WelfareShowProps {
 
 export default function WelfareShow({ welfareNeed }: WelfareShowProps) {
     const statusVariant =
-        welfareNeed.status === "Resolved"
-            ? "default"
-            : welfareNeed.status === "In Progress"
-              ? "secondary"
-              : "outline";
+        welfareNeed.status === 'Resolved'
+            ? 'default'
+            : welfareNeed.status === 'In Progress'
+              ? 'secondary'
+              : 'outline';
 
     const handleStatusChange = (status: string) => {
         router.patch(
@@ -283,7 +283,7 @@ export default function WelfareShow({ welfareNeed }: WelfareShowProps) {
                                         )}
 
                                         <p className="mt-3 text-xs text-muted-foreground">
-                                            Recorded by:{" "}
+                                            Recorded by:{' '}
                                             {support.recorded_by.name}
                                         </p>
                                     </div>

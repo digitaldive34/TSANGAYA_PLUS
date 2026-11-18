@@ -1,22 +1,22 @@
-import { Head, Link, useForm } from "@inertiajs/react";
-import { ArrowLeft, ClipboardCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Head, Link, useForm } from '@inertiajs/react';
+import { ArrowLeft, ClipboardCheck } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
-import teacher from "@/routes/teacher";
+} from '@/components/ui/select';
+import teacher from '@/routes/teacher';
 
 interface Learner {
     id: number;
@@ -56,7 +56,7 @@ export default function AttendancePage({
     const initialAttendance = learners.reduce(
         (attendance, learner) => {
             attendance[learner.id] =
-                existingAttendance[learner.id]?.status ?? "Present";
+                existingAttendance[learner.id]?.status ?? 'Present';
 
             return attendance;
         },
@@ -68,7 +68,7 @@ export default function AttendancePage({
     });
 
     const updateAttendance = (learnerId: number, status: string) => {
-        setData("attendance", {
+        setData('attendance', {
             ...data.attendance,
             [learnerId]: status,
         });
@@ -99,7 +99,7 @@ export default function AttendancePage({
                             Record Attendance
                         </h1>
                         <p className="text-sm text-muted-foreground">
-                            {session.topic} · {session.subject.name} ·{" "}
+                            {session.topic} · {session.subject.name} ·{' '}
                             {session.class_group}
                         </p>
                     </div>
@@ -110,7 +110,7 @@ export default function AttendancePage({
                         <CardHeader>
                             <CardTitle>Attendance Register</CardTitle>
                             <CardDescription>
-                                Mark the attendance status for each learner in{" "}
+                                Mark the attendance status for each learner in{' '}
                                 {session.centre.name}.
                             </CardDescription>
                         </CardHeader>
@@ -187,7 +187,7 @@ export default function AttendancePage({
                             disabled={processing || learners.length === 0}
                         >
                             <ClipboardCheck className="mr-2 h-4 w-4" />
-                            {processing ? "Saving..." : "Save Attendance"}
+                            {processing ? 'Saving...' : 'Save Attendance'}
                         </Button>
                     </div>
                 </form>

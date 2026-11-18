@@ -27,10 +27,10 @@ import admin from '@/routes/admin';
 import programmeOfficer from '@/routes/programme-officer';
 import teacher from '@/routes/teacher';
 import { dashboard } from '@/routes';
-import type { NavItem } from '@/types';
+import type { NavItem, SharedPageProps } from '@/types';
 
 export function AppSidebar() {
-    const { auth } = usePage().props;
+    const { auth } = usePage<SharedPageProps>().props;
     const role = auth?.user?.role;
 
     let dashboardUrl = dashboard();

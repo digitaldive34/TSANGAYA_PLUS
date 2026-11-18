@@ -1,33 +1,33 @@
-import { Head, Link, useForm } from "@inertiajs/react";
-import { ArrowLeft, Building2 } from "lucide-react";
+import { Head, Link, useForm } from '@inertiajs/react';
+import { ArrowLeft, Building2 } from 'lucide-react';
 
-import InputError from "@/components/input-error";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
 export default function CreateCentre() {
     const { data, setData, post, processing, errors } = useForm({
-        name: "",
-        location: "",
-        learner_population: "",
-        internet_availability: "Not Available",
-        electricity_availability: "Not Available",
-        technology_readiness: "Low",
-        status: "active",
+        name: '',
+        location: '',
+        learner_population: '',
+        internet_availability: 'Not Available',
+        electricity_availability: 'Not Available',
+        technology_readiness: 'Low',
+        status: 'active',
     });
 
     const submit = (event: React.FormEvent) => {
         event.preventDefault();
-        post("/admin/centres");
+        post('/admin/centres');
     };
 
     return (
@@ -43,7 +43,7 @@ export default function CreateCentre() {
                     </Button>
 
                     <div>
-                        <p className="text-xs py-2 font-small text-muted-foreground">
+                        <p className="font-small py-2 text-xs text-muted-foreground">
                             TSANGAYA+ / Centre Management
                         </p>
                         <h1 className="text-2xl font-bold tracking-tight">
@@ -71,7 +71,7 @@ export default function CreateCentre() {
                                     id="name"
                                     value={data.name}
                                     onChange={(e) =>
-                                        setData("name", e.target.value)
+                                        setData('name', e.target.value)
                                     }
                                     placeholder="Enter centre name"
                                     required
@@ -85,7 +85,7 @@ export default function CreateCentre() {
                                     id="location"
                                     value={data.location}
                                     onChange={(e) =>
-                                        setData("location", e.target.value)
+                                        setData('location', e.target.value)
                                     }
                                     placeholder="Enter centre location"
                                     required
@@ -104,7 +104,7 @@ export default function CreateCentre() {
                                     value={data.learner_population}
                                     onChange={(e) =>
                                         setData(
-                                            "learner_population",
+                                            'learner_population',
                                             e.target.value,
                                         )
                                     }
@@ -128,7 +128,7 @@ export default function CreateCentre() {
                                 <Select
                                     value={data.internet_availability}
                                     onValueChange={(value) =>
-                                        setData("internet_availability", value)
+                                        setData('internet_availability', value)
                                     }
                                 >
                                     <SelectTrigger>
@@ -154,7 +154,7 @@ export default function CreateCentre() {
                                     value={data.electricity_availability}
                                     onValueChange={(value) =>
                                         setData(
-                                            "electricity_availability",
+                                            'electricity_availability',
                                             value,
                                         )
                                     }
@@ -181,7 +181,7 @@ export default function CreateCentre() {
                                 <Select
                                     value={data.technology_readiness}
                                     onValueChange={(value) =>
-                                        setData("technology_readiness", value)
+                                        setData('technology_readiness', value)
                                     }
                                 >
                                     <SelectTrigger>
@@ -211,7 +211,7 @@ export default function CreateCentre() {
                             <Select
                                 value={data.status}
                                 onValueChange={(value) =>
-                                    setData("status", value)
+                                    setData('status', value)
                                 }
                             >
                                 <SelectTrigger>
@@ -235,7 +235,7 @@ export default function CreateCentre() {
                         </Button>
 
                         <Button type="submit" disabled={processing}>
-                            {processing ? "Saving..." : "Save Centre"}
+                            {processing ? 'Saving...' : 'Save Centre'}
                         </Button>
                     </div>
                 </form>
