@@ -1,4 +1,4 @@
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link } from '@inertiajs/react';
 import {
     GraduationCap,
     HeartHandshake,
@@ -8,96 +8,89 @@ import {
     ClipboardList,
     ArrowRight,
     BadgeCheck,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
-import programmeOfficer from "@/routes/programme-officer";
+} from '@/components/ui/card';
+import programmeOfficer from '@/routes/programme-officer';
+import DashboardStatCard from '@/components/dashboard-stat-card';
+import ActivityTimeline, {
+    type ActivityEntry,
+} from '@/components/activity-timeline';
 
 interface DashboardProps {
     totalLearners: number;
-    activeLearners: number;
     newLearnersThisMonth: number;
     openWelfareNeeds: number;
     resolvedWelfareNeeds: number;
-    totalSessions: number;
+    recentTeacherActivities: ActivityEntry[];
 }
 
 export default function Dashboard({
     totalLearners,
-    activeLearners,
     newLearnersThisMonth,
     openWelfareNeeds,
     resolvedWelfareNeeds,
-    totalSessions,
+    recentTeacherActivities,
 }: DashboardProps) {
     const stats = [
         {
-            title: "Total Learners",
+            title: 'Total Learners',
             value: totalLearners,
             icon: GraduationCap,
-            description: "Registered learners",
+            description: 'Registered learners',
         },
         {
-            title: "Active Learners",
-            value: activeLearners,
-            icon: UserPlus,
-            description: "Currently active",
-        },
-        {
-            title: "New This Month",
+            title: 'New This Month',
             value: newLearnersThisMonth,
             icon: CalendarPlus,
-            description: "Learners registered this month",
+            description: 'Learners registered this month',
+            tone: 'blue' as const,
         },
         {
-            title: "Open Welfare Needs",
+            title: 'Open Welfare Needs',
             value: openWelfareNeeds,
             icon: HeartHandshake,
-            description: "Awaiting resolution",
+            description: 'Awaiting resolution',
+            tone: 'amber' as const,
         },
         {
-            title: "Resolved Welfare Needs",
+            title: 'Resolved Welfare Needs',
             value: resolvedWelfareNeeds,
             icon: BadgeCheck,
-            description: "Needs marked resolved",
+            description: 'Needs marked resolved',
+            tone: 'teal' as const,
         },
-        {
-            title: "Learning Sessions",
-            value: totalSessions,
-            icon: CalendarDays,
-            description: "Sessions recorded",
-        },
-    ];
+    ] as const;
 
     const quickActions = [
         {
-            title: "Register Learner",
-            description: "Add a new learner to a Tsangaya centre.",
+            title: 'Register Learner',
+            description: 'Add a new learner to a Tsangaya centre.',
             href: programmeOfficer.learners.create(),
             icon: UserPlus,
         },
         {
-            title: "Manage Learners",
-            description: "View and manage registered learners.",
+            title: 'Manage Learners',
+            description: 'View and manage registered learners.',
             href: programmeOfficer.learners.index(),
             icon: GraduationCap,
         },
         {
-            title: "Record Welfare Need",
-            description: "Document a learner welfare concern.",
+            title: 'Record Welfare Need',
+            description: 'Document a learner welfare concern.',
             href: programmeOfficer.welfare.create(),
             icon: HeartHandshake,
         },
         {
-            title: "View Welfare Records",
-            description: "Review welfare needs and support records.",
+            title: 'View Welfare Records',
+            description: 'Review welfare needs and support records.',
             href: programmeOfficer.welfare.index(),
             icon: ClipboardList,
         },
@@ -107,7 +100,7 @@ export default function Dashboard({
         <>
             <Head title="Programme Officer Dashboard" />
 
-            <div className="space-y-8 p-6">
+            <div className="space-y-6 p-4 sm:p-5 lg:p-6">
                 {/* Welcome */}
                 <div>
                     <h1 className="text-2xl font-bold tracking-tight">
@@ -120,34 +113,47 @@ export default function Dashboard({
                 </div>
 
                 {/* Statistics */}
-                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                     {stats.map((stat) => {
                         const Icon = stat.icon;
 
                         return (
-                            <Card key={stat.title}>
-                                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                                    <CardDescription>
-                                        {stat.title}
-                                    </CardDescription>
-                                    <Icon className="h-5 w-5 text-muted-foreground" />
-                                </CardHeader>
-
-                                <CardContent>
-                                    <div className="text-2xl font-bold">
-                                        {stat.value}
-                                    </div>
-                                    <p className="mt-1 text-xs text-muted-foreground">
-                                        {stat.description}
-                                    </p>
-                                </CardContent>
-                            </Card>
+                            <DashboardStatCard
+                                key={stat.title}
+                                label={stat.title}
+                                value={stat.value}
+                                description={stat.description}
+                                icon={Icon}
+                                tone={'tone' in stat ? stat.tone : 'navy'}
+                            />
                         );
                     })}
                 </div>
 
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between gap-4">
+                        <div>
+                            <CardTitle>Teacher Activity</CardTitle>
+                            <CardDescription>
+                                Recent teaching updates and classroom actions.
+                            </CardDescription>
+                        </div>
+                        <Button variant="outline" size="sm" asChild>
+                            <Link href="/programme-officer/monitoring/activities">
+                                View Full Timeline
+                            </Link>
+                        </Button>
+                    </CardHeader>
+                    <CardContent>
+                        <ActivityTimeline
+                            activities={recentTeacherActivities}
+                            emptyMessage="Teacher updates will appear here as teachers record attendance, assessments, and completed sessions."
+                        />
+                    </CardContent>
+                </Card>
+
                 {/* Quick Actions */}
-                <section className="space-y-4">
+                <section className="space-y-3">
                     <div>
                         <h2 className="text-lg font-semibold">Quick Actions</h2>
                         <p className="text-sm text-muted-foreground">
@@ -155,7 +161,7 @@ export default function Dashboard({
                         </p>
                     </div>
 
-                    <div className="grid gap-4 md:grid-cols-2">
+                    <div className="grid gap-3 md:grid-cols-2">
                         {quickActions.map((action) => {
                             const Icon = action.icon;
 

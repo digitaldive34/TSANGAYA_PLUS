@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
 use App\Models\LearningSession;
+use App\Support\ActivityLogger;
 use Inertia\Inertia;
 
 class LearningSessionController extends Controller
@@ -62,6 +63,12 @@ class LearningSessionController extends Controller
     $learningSession->update([
         'status' => 'Delivered',
     ]);
+
+    ActivityLogger::log(
+        'learning_session.delivered',
+        "Marked the learning session \"{$learningSession->topic}\" at {$learningSession->centre->name} as delivered.",
+        $learningSession
+    );
 
     return back()->with('success', 'Learning session marked as delivered.');
 }

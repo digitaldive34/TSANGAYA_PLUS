@@ -1,5 +1,6 @@
-import { Head, Link } from "@inertiajs/react";
-import { Plus, Pencil, Users } from "lucide-react";
+import { Head, Link, router } from "@inertiajs/react";
+import { useState } from "react";
+import { Plus, Eye, Users } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -18,6 +19,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import DataTableFilters from "@/components/data-table-filters";
 
 interface User {
     id: number;
@@ -34,6 +36,12 @@ interface User {
 }
 
 interface Props {
+    roles: string[];
+    filters: {
+        search: string;
+        role: string;
+        status: string;
+    };
     users: {
         data: User[];
         links: {
@@ -44,7 +52,27 @@ interface Props {
     };
 }
 
-export default function UsersIndex({ users }: Props) {
+export default function UsersIndex({ users, roles, filters }: Props) {
+    const [search, setSearch] = useState(filters.search);
+    const [role, setRole] = useState(filters.role || "all");
+    const [status, setStatus] = useState(filters.status || "all");
+    const applyFilters = () =>
+        router.get(
+            "/admin/users",
+            {
+                search: search || undefined,
+                role: role === "all" ? undefined : role,
+                status: status === "all" ? undefined : status,
+            },
+            { preserveState: true, preserveScroll: true },
+        );
+    const clearFilters = () => {
+        setSearch("");
+        setRole("all");
+        setStatus("all");
+        router.get("/admin/users");
+    };
+
     return (
         <>
             <Head title="User Management" />
@@ -83,9 +111,46 @@ export default function UsersIndex({ users }: Props) {
                     </CardHeader>
 
                     <CardContent>
+                        <div className="mb-4">
+                            <DataTableFilters
+                                search={search}
+                                searchPlaceholder="Search name, email, phone, role, or centre"
+                                onSearchChange={setSearch}
+                                filters={[
+                                    {
+                                        key: "role",
+                                        label: "Role",
+                                        value: role,
+                                        onChange: setRole,
+                                        options: [
+                                            { label: "All roles", value: "all" },
+                                            ...roles.map((name) => ({
+                                                label: name,
+                                                value: name,
+                                            })),
+                                        ],
+                                    },
+                                    {
+                                        key: "status",
+                                        label: "Status",
+                                        value: status,
+                                        onChange: setStatus,
+                                        options: [
+                                            { label: "All statuses", value: "all" },
+                                            { label: "Active", value: "active" },
+                                            { label: "Inactive", value: "inactive" },
+                                        ],
+                                    },
+                                ]}
+                                onApply={applyFilters}
+                                onClear={clearFilters}
+                            />
+                        </div>
                         {users.data.length === 0 ? (
                             <p className="py-8 text-center text-sm text-muted-foreground">
-                                No users have been registered yet.
+                                {search || role !== "all" || status !== "all"
+                                    ? "No matching users found."
+                                    : "No users have been registered yet."}
                             </p>
                         ) : (
                             <div className="overflow-x-auto rounded-md border">
@@ -133,18 +198,20 @@ export default function UsersIndex({ users }: Props) {
                                                     </span>
                                                 </TableCell>
                                                 <TableCell>
-                                                    <Button
-                                                        variant="outline"
-                                                        size="sm"
-                                                        asChild
-                                                    >
-                                                        <Link
-                                                            href={`/admin/users/${user.id}/edit`}
+                                                    <div className="flex gap-2">
+                                                        <Button
+                                                            variant="outline"
+                                                            size="sm"
+                                                            asChild
                                                         >
-                                                            <Pencil className="mr-2 h-4 w-4" />
-                                                            Edit
-                                                        </Link>
-                                                    </Button>
+                                                            <Link
+                                                                href={`/admin/users/${user.id}`}
+                                                            >
+                                                                <Eye className="mr-2 h-4 w-4" />
+                                                                View
+                                                            </Link>
+                                                        </Button>
+                                                    </div>
                                                 </TableCell>
                                             </TableRow>
                                         ))}

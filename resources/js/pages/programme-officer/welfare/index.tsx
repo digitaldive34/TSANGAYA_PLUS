@@ -1,9 +1,11 @@
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
+import { useState } from "react";
 import { CalendarDays, Eye, HeartHandshake, MapPin, Plus } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import DataTableFilters from "@/components/data-table-filters";
 
 interface WelfareNeed {
     id: number;
@@ -31,6 +33,12 @@ interface PaginationLink {
 }
 
 interface WelfareIndexProps {
+    totalWelfareNeeds: number;
+    filters: {
+        search: string;
+        category: string;
+        status: string;
+    };
     welfareNeeds: {
         data: WelfareNeed[];
         total: number;
@@ -38,7 +46,31 @@ interface WelfareIndexProps {
     };
 }
 
-export default function WelfareIndex({ welfareNeeds }: WelfareIndexProps) {
+export default function WelfareIndex({
+    welfareNeeds,
+    totalWelfareNeeds,
+    filters,
+}: WelfareIndexProps) {
+    const [search, setSearch] = useState(filters.search);
+    const [category, setCategory] = useState(filters.category || "all");
+    const [status, setStatus] = useState(filters.status || "all");
+    const applyFilters = () =>
+        router.get(
+            "/programme-officer/welfare",
+            {
+                search: search || undefined,
+                category: category === "all" ? undefined : category,
+                status: status === "all" ? undefined : status,
+            },
+            { preserveState: true, preserveScroll: true },
+        );
+    const clearFilters = () => {
+        setSearch("");
+        setCategory("all");
+        setStatus("all");
+        router.get("/programme-officer/welfare");
+    };
+
     const formatDate = (date: string) => {
         return new Date(`${date}T00:00:00`).toLocaleDateString("en-GB", {
             day: "numeric",
@@ -65,16 +97,16 @@ export default function WelfareIndex({ welfareNeeds }: WelfareIndexProps) {
             <div className="space-y-6">
                 <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight">
+                        <h1 className="text-2xl px-6 pt-3 font-bold tracking-tight">
                             Learner Welfare
                         </h1>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm font-small px-6 text-muted-foreground">
                             Monitor learner welfare needs and support provided
                             across Tsangaya centres.
                         </p>
                     </div>
 
-                    <Button asChild>
+                    <Button asChild className="mx-6">
                         <Link href="/programme-officer/welfare/create">
                             <Plus className="mr-2 h-4 w-4" />
                             Record Welfare Need
@@ -82,7 +114,7 @@ export default function WelfareIndex({ welfareNeeds }: WelfareIndexProps) {
                     </Button>
                 </div>
 
-                <Card>
+                <Card className="mx-6">
                     <CardContent className="flex items-center gap-4 p-5">
                         <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                             <HeartHandshake className="h-6 w-6 text-primary" />
@@ -93,24 +125,77 @@ export default function WelfareIndex({ welfareNeeds }: WelfareIndexProps) {
                                 Total Welfare Records
                             </p>
                             <p className="text-2xl font-bold">
-                                {welfareNeeds.total}
+                                {totalWelfareNeeds}
                             </p>
                         </div>
                     </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="mx-6">
                     <CardHeader>
                         <CardTitle>Welfare Records</CardTitle>
                     </CardHeader>
 
-                    <CardContent>
+                    <CardContent className="space-y-4">
+                        <DataTableFilters
+                            search={search}
+                            searchPlaceholder="Search learner, centre, code, or description"
+                            onSearchChange={setSearch}
+                            filters={[
+                                {
+                                    key: "category",
+                                    label: "Category",
+                                    value: category,
+                                    onChange: setCategory,
+                                    options: [
+                                        {
+                                            label: "All categories",
+                                            value: "all",
+                                        },
+                                        {
+                                            label: "Clothing",
+                                            value: "Clothing",
+                                        },
+                                        { label: "Health", value: "Health" },
+                                        {
+                                            label: "Learning Materials",
+                                            value: "Learning Materials",
+                                        },
+                                        { label: "Other", value: "Other" },
+                                    ],
+                                },
+                                {
+                                    key: "status",
+                                    label: "Status",
+                                    value: status,
+                                    onChange: setStatus,
+                                    options: [
+                                        { label: "All statuses", value: "all" },
+                                        { label: "Open", value: "Open" },
+                                        {
+                                            label: "In Progress",
+                                            value: "In Progress",
+                                        },
+                                        {
+                                            label: "Resolved",
+                                            value: "Resolved",
+                                        },
+                                    ],
+                                },
+                            ]}
+                            onApply={applyFilters}
+                            onClear={clearFilters}
+                        />
                         {welfareNeeds.data.length === 0 ? (
                             <div className="flex flex-col items-center justify-center py-12 text-center">
                                 <HeartHandshake className="mb-3 h-10 w-10 text-muted-foreground" />
 
                                 <h3 className="font-semibold">
-                                    No welfare records yet
+                                    {search ||
+                                    category !== "all" ||
+                                    status !== "all"
+                                        ? "No matching welfare records found"
+                                        : "No welfare records yet"}
                                 </h3>
 
                                 <p className="mt-1 text-sm text-muted-foreground">

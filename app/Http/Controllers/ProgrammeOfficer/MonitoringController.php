@@ -62,6 +62,7 @@ class MonitoringController extends Controller
             'centre_id' => ['nullable', 'exists:centres,id'],
             'subject_id' => ['nullable', 'exists:subjects,id'],
             'class_group' => ['nullable', 'in:Class A,Class B'],
+            'search' => ['nullable', 'string', 'max:100'],
         ]);
 
         $records = AssessmentRecord::with([
@@ -88,6 +89,25 @@ class MonitoringController extends Controller
                 fn ($query, $classGroup) =>
                     $query->where('class_group', $classGroup)
             )
+            ->when($validated['search'] ?? null, function ($query, $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->whereHas(
+                        'learner',
+                        fn ($learnerQuery) => $learnerQuery
+                            ->where('full_name', 'like', "%{$search}%")
+                            ->orWhere('learner_code', 'like', "%{$search}%")
+                            ->orWhereHas(
+                                'centre',
+                                fn ($centreQuery) => $centreQuery
+                                    ->where('name', 'like', "%{$search}%")
+                            )
+                    )->orWhereHas(
+                        'subject',
+                        fn ($subjectQuery) => $subjectQuery
+                            ->where('name', 'like', "%{$search}%")
+                    );
+                });
+            })
             ->latest()
             ->get();
 

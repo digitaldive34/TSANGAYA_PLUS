@@ -14,12 +14,53 @@ use Inertia\Inertia;
 
 class LearnerController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $filters = $request->validate([
+            'search' => ['nullable', 'string', 'max:100'],
+            'class_group' => ['nullable', 'in:Class A,Class B'],
+            'status' => ['nullable', 'in:active,inactive'],
+            'centre_id' => ['nullable', 'exists:centres,id'],
+        ]);
+
         return Inertia::render('programme-officer/learners/index', [
             'learners' => Learner::with('centre')
+                ->when($filters['search'] ?? null, function ($query, $search) {
+                    $query->where(function ($query) use ($search) {
+                        $query->where('full_name', 'like', "%{$search}%")
+                            ->orWhere('learner_code', 'like', "%{$search}%")
+                            ->orWhereHas(
+                                'centre',
+                                fn ($centreQuery) => $centreQuery
+                                    ->where('name', 'like', "%{$search}%")
+                            );
+                    });
+                })
+                ->when(
+                    $filters['class_group'] ?? null,
+                    fn ($query, $classGroup) =>
+                        $query->where('class_group', $classGroup)
+                )
+                ->when(
+                    $filters['status'] ?? null,
+                    fn ($query, $status) => $query->where('status', $status)
+                )
+                ->when(
+                    $filters['centre_id'] ?? null,
+                    fn ($query, $centreId) =>
+                        $query->where('centre_id', $centreId)
+                )
                 ->latest()
-                ->paginate(10),
+                ->paginate(10)
+                ->withQueryString(),
+            'totalLearners' => Learner::count(),
+            'centres' => Centre::orderBy('name')->get(['id', 'name']),
+            'filters' => [
+                'search' => $filters['search'] ?? '',
+                'class_group' => $filters['class_group'] ?? '',
+                'status' => $filters['status'] ?? '',
+                'centre_id' => $filters['centre_id'] ?? '',
+            ],
         ]);
     }
 

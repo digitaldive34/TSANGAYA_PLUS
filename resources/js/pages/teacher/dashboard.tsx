@@ -1,4 +1,5 @@
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, router } from '@inertiajs/react';
+import { useState } from 'react';
 import {
     CalendarDays,
     ClipboardCheck,
@@ -6,18 +7,20 @@ import {
     Eye,
     GraduationCap,
     Percent,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
-import teacher from "@/routes/teacher";
+} from '@/components/ui/card';
+import teacher from '@/routes/teacher';
+import DataTableFilters from '@/components/data-table-filters';
+import DashboardStatCard from '@/components/dashboard-stat-card';
 
 interface LearningSession {
     id: number;
@@ -34,11 +37,14 @@ interface LearningSession {
 }
 
 interface TeacherDashboardProps {
-    totalSessions: number;
     scheduledSessions: number;
     deliveredSessions: number;
     attendanceRate: number | null;
     assessmentRecords: number;
+    filters: {
+        search: string;
+        status: string;
+    };
     sessions: {
         data: LearningSession[];
         links: {
@@ -49,23 +55,40 @@ interface TeacherDashboardProps {
     };
 }
 export default function TeacherDashboard({
-    totalSessions,
     scheduledSessions,
     deliveredSessions,
     attendanceRate,
     assessmentRecords,
     sessions,
+    filters,
 }: TeacherDashboardProps) {
+    const [search, setSearch] = useState(filters.search);
+    const [status, setStatus] = useState(filters.status || 'all');
+    const applyFilters = () =>
+        router.get(
+            '/teacher/dashboard',
+            {
+                search: search || undefined,
+                status: status === 'all' ? undefined : status,
+            },
+            { preserveState: true, preserveScroll: true },
+        );
+    const clearFilters = () => {
+        setSearch('');
+        setStatus('all');
+        router.get('/teacher/dashboard');
+    };
+
     const getStatusVariant = (status: string) => {
         switch (status) {
-            case "Delivered":
-                return "default";
-            case "Cancelled":
-                return "destructive";
-            case "Rescheduled":
-                return "secondary";
+            case 'Delivered':
+                return 'default';
+            case 'Cancelled':
+                return 'destructive';
+            case 'Rescheduled':
+                return 'secondary';
             default:
-                return "outline";
+                return 'outline';
         }
     };
 
@@ -73,7 +96,7 @@ export default function TeacherDashboard({
         <>
             <Head title="Teacher Dashboard" />
 
-            <div className="flex flex-col gap-6 p-6">
+            <div className="flex flex-col gap-5 p-4 sm:p-5 lg:p-6">
                 {/* Welcome Section */}
                 <div>
                     <h1 className="text-2xl font-bold tracking-tight">
@@ -86,93 +109,37 @@ export default function TeacherDashboard({
                 </div>
 
                 {/* Statistics */}
-                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium">
-                                Total Assigned Sessions
-                            </CardTitle>
-                            <CalendarDays className="h-5 w-5 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">
-                                {totalSessions}
-                            </div>
-                            <p className="text-xs text-muted-foreground">
-                                Sessions assigned to you
-                            </p>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium">
-                                Scheduled Sessions
-                            </CardTitle>
-                            <CalendarDays className="h-5 w-5 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">
-                                {scheduledSessions}
-                            </div>
-                            <p className="text-xs text-muted-foreground">
-                                Upcoming learning sessions
-                            </p>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium">
-                                Delivered Sessions
-                            </CardTitle>
-                            <ClipboardCheck className="h-5 w-5 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">
-                                {deliveredSessions}
-                            </div>
-                            <p className="text-xs text-muted-foreground">
-                                Completed learning sessions
-                            </p>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium">
-                                Attendance Rate
-                            </CardTitle>
-                            <Percent className="h-5 w-5 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">
-                                {attendanceRate === null
-                                    ? "—"
-                                    : `${attendanceRate}%`}
-                            </div>
-                            <p className="text-xs text-muted-foreground">
-                                Present out of attendance recorded
-                            </p>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium">
-                                Assessment Records
-                            </CardTitle>
-                            <ClipboardList className="h-5 w-5 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">
-                                {assessmentRecords}
-                            </div>
-                            <p className="text-xs text-muted-foreground">
-                                Learner-subject records updated by you
-                            </p>
-                        </CardContent>
-                    </Card>
+                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                    <DashboardStatCard
+                        label="Scheduled"
+                        value={scheduledSessions}
+                        description="Upcoming learning sessions"
+                        icon={CalendarDays}
+                        tone="blue"
+                    />
+                    <DashboardStatCard
+                        label="Delivered"
+                        value={deliveredSessions}
+                        description="Completed learning sessions"
+                        icon={ClipboardCheck}
+                        tone="teal"
+                    />
+                    <DashboardStatCard
+                        label="Attendance Rate"
+                        value={
+                            attendanceRate === null ? '—' : `${attendanceRate}%`
+                        }
+                        description="Present out of recorded attendance"
+                        icon={Percent}
+                        tone="amber"
+                    />
+                    <DashboardStatCard
+                        label="Assessment Records"
+                        value={assessmentRecords}
+                        description="Records updated by you"
+                        icon={ClipboardList}
+                        tone="violet"
+                    />
                 </div>
 
                 {/* Assigned Sessions */}
@@ -185,6 +152,45 @@ export default function TeacherDashboard({
                     </CardHeader>
 
                     <CardContent>
+                        <div className="mb-4">
+                            <DataTableFilters
+                                search={search}
+                                searchPlaceholder="Search topic, centre, subject, or class"
+                                onSearchChange={setSearch}
+                                filters={[
+                                    {
+                                        key: 'status',
+                                        label: 'Status',
+                                        value: status,
+                                        onChange: setStatus,
+                                        options: [
+                                            {
+                                                label: 'All statuses',
+                                                value: 'all',
+                                            },
+                                            {
+                                                label: 'Scheduled',
+                                                value: 'Scheduled',
+                                            },
+                                            {
+                                                label: 'Delivered',
+                                                value: 'Delivered',
+                                            },
+                                            {
+                                                label: 'Cancelled',
+                                                value: 'Cancelled',
+                                            },
+                                            {
+                                                label: 'Rescheduled',
+                                                value: 'Rescheduled',
+                                            },
+                                        ],
+                                    },
+                                ]}
+                                onApply={applyFilters}
+                                onClear={clearFilters}
+                            />
+                        </div>
                         {sessions.data.length > 0 ? (
                             <div className="overflow-x-auto">
                                 <table className="w-full text-sm">
@@ -260,12 +266,46 @@ export default function TeacherDashboard({
                             <div className="py-10 text-center">
                                 <GraduationCap className="mx-auto mb-3 h-10 w-10 text-muted-foreground" />
                                 <h3 className="font-semibold">
-                                    No sessions assigned yet
+                                    {search || status !== 'all'
+                                        ? 'No matching sessions found'
+                                        : 'No sessions assigned yet'}
                                 </h3>
                                 <p className="mt-1 text-sm text-muted-foreground">
-                                    Your assigned learning sessions will appear
-                                    here.
+                                    {search || status !== 'all'
+                                        ? 'Try adjusting your search or filters.'
+                                        : 'Your assigned learning sessions will appear here.'}
                                 </p>
+                            </div>
+                        )}
+                        {sessions.links.length > 3 && (
+                            <div className="mt-4 flex flex-wrap justify-end gap-2">
+                                {sessions.links.map((link, index) => (
+                                    <Button
+                                        key={index}
+                                        variant={
+                                            link.active ? 'default' : 'outline'
+                                        }
+                                        size="sm"
+                                        disabled={!link.url}
+                                        asChild={!!link.url}
+                                    >
+                                        {link.url ? (
+                                            <Link
+                                                href={link.url}
+                                                dangerouslySetInnerHTML={{
+                                                    __html: link.label,
+                                                }}
+                                                preserveScroll
+                                            />
+                                        ) : (
+                                            <span
+                                                dangerouslySetInnerHTML={{
+                                                    __html: link.label,
+                                                }}
+                                            />
+                                        )}
+                                    </Button>
+                                ))}
                             </div>
                         )}
                     </CardContent>

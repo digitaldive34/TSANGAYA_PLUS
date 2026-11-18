@@ -1,11 +1,11 @@
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import { useState } from "react";
-import { Search, MapPin, Users, Plus, Eye } from "lucide-react";
+import { MapPin, Users, Plus, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import DataTableFilters from "@/components/data-table-filters";
 
 interface Centre {
     id: number;
@@ -22,17 +22,44 @@ interface Props {
     centres: {
         data: Centre[];
         total: number;
+        links: {
+            url: string | null;
+            label: string;
+            active: boolean;
+        }[];
+    };
+    totalCentres: number;
+    activeCentres: number;
+    filters: {
+        search: string;
+        status: string;
     };
 }
 
-export default function CentresIndex({ centres }: Props) {
-    const [search, setSearch] = useState("");
+export default function CentresIndex({
+    centres,
+    totalCentres,
+    activeCentres,
+    filters,
+}: Props) {
+    const [search, setSearch] = useState(filters.search);
+    const [status, setStatus] = useState(filters.status || "all");
 
-    const filteredCentres = centres.data.filter((centre) =>
-        `${centre.name} ${centre.location}`
-            .toLowerCase()
-            .includes(search.toLowerCase()),
-    );
+    const applyFilters = () => {
+        router.get(
+            "/admin/centres",
+            {
+                search: search || undefined,
+                status: status === "all" ? undefined : status,
+            },
+            { preserveState: true, preserveScroll: true },
+        );
+    };
+    const clearFilters = () => {
+        setSearch("");
+        setStatus("all");
+        router.get("/admin/centres");
+    };
 
     return (
         <>
@@ -41,7 +68,7 @@ export default function CentresIndex({ centres }: Props) {
             <div className="space-y-6 p-6">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                        <p className="text-sm font-medium text-muted-foreground">
+                        <p className="text-xs py-2 font-medium text-muted-foreground">
                             TSANGAYA+
                         </p>
 
@@ -49,7 +76,7 @@ export default function CentresIndex({ centres }: Props) {
                             Centre Management
                         </h1>
 
-                        <p className="mt-1 text-sm text-muted-foreground">
+                        <p className="text-sm text-muted-foreground">
                             Manage and monitor registered Tsangaya centres.
                         </p>
                     </div>
@@ -70,9 +97,7 @@ export default function CentresIndex({ centres }: Props) {
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-2xl font-bold">
-                                {centres.total}
-                            </p>
+                            <p className="text-2xl font-bold">{totalCentres}</p>
                         </CardContent>
                     </Card>
 
@@ -84,11 +109,7 @@ export default function CentresIndex({ centres }: Props) {
                         </CardHeader>
                         <CardContent>
                             <p className="text-2xl font-bold">
-                                {
-                                    centres.data.filter(
-                                        (centre) => centre.status === "active",
-                                    ).length
-                                }
+                                {activeCentres}
                             </p>
                         </CardContent>
                     </Card>
@@ -103,41 +124,52 @@ export default function CentresIndex({ centres }: Props) {
                                     View and manage Tsangaya centres.
                                 </p>
                             </div>
-
-                            <div className="relative w-full sm:max-w-xs">
-                                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                                <Input
-                                    placeholder="Search centres..."
-                                    value={search}
-                                    onChange={(event) =>
-                                        setSearch(event.target.value)
-                                    }
-                                    className="pl-9"
-                                />
-                            </div>
                         </div>
                     </CardHeader>
 
-                    <CardContent>
-                        {filteredCentres.length === 0 ? (
+                    <CardContent className="space-y-4">
+                        <DataTableFilters
+                            search={search}
+                            searchPlaceholder="Search centres by name or location"
+                            onSearchChange={setSearch}
+                            filters={[
+                                {
+                                    key: "status",
+                                    label: "Status",
+                                    value: status,
+                                    onChange: setStatus,
+                                    options: [
+                                        { label: "All statuses", value: "all" },
+                                        { label: "Active", value: "active" },
+                                        {
+                                            label: "Inactive",
+                                            value: "inactive",
+                                        },
+                                    ],
+                                },
+                            ]}
+                            onApply={applyFilters}
+                            onClear={clearFilters}
+                        />
+                        {centres.data.length === 0 ? (
                             <div className="py-12 text-center">
                                 <MapPin className="mx-auto mb-3 size-10 text-muted-foreground" />
 
                                 <h3 className="font-semibold">
-                                    {search
+                                    {search || status !== "all"
                                         ? "No matching centres found"
                                         : "No centres registered yet"}
                                 </h3>
 
                                 <p className="mt-1 text-sm text-muted-foreground">
-                                    {search
+                                    {search || status !== "all"
                                         ? "Try searching with another name or location."
                                         : "Registered Tsangaya centres will appear here."}
                                 </p>
                             </div>
                         ) : (
                             <div className="space-y-3">
-                                {filteredCentres.map((centre) => (
+                                {centres.data.map((centre) => (
                                     <div
                                         key={centre.id}
                                         className="flex flex-col gap-3 rounded-lg border p-4 sm:flex-row sm:items-center sm:justify-between"
@@ -189,6 +221,37 @@ export default function CentresIndex({ centres }: Props) {
                                             </Button>
                                         </div>
                                     </div>
+                                ))}
+                            </div>
+                        )}
+                        {centres.links.length > 3 && (
+                            <div className="flex flex-wrap justify-end gap-2">
+                                {centres.links.map((link, index) => (
+                                    <Button
+                                        key={index}
+                                        variant={
+                                            link.active ? "default" : "outline"
+                                        }
+                                        size="sm"
+                                        disabled={!link.url}
+                                        asChild={!!link.url}
+                                    >
+                                        {link.url ? (
+                                            <Link
+                                                href={link.url}
+                                                dangerouslySetInnerHTML={{
+                                                    __html: link.label,
+                                                }}
+                                                preserveScroll
+                                            />
+                                        ) : (
+                                            <span
+                                                dangerouslySetInnerHTML={{
+                                                    __html: link.label,
+                                                }}
+                                            />
+                                        )}
+                                    </Button>
                                 ))}
                             </div>
                         )}

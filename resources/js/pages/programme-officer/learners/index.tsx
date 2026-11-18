@@ -1,18 +1,11 @@
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import { useState } from "react";
-import { Search, Users, MapPin, GraduationCap, Eye, Plus } from "lucide-react";
+import { Users, MapPin, GraduationCap, Eye, Plus } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
+import DataTableFilters from "@/components/data-table-filters";
 
 interface Centre {
     id: number;
@@ -30,6 +23,14 @@ interface Learner {
 }
 
 interface Props {
+    centres: Centre[];
+    totalLearners: number;
+    filters: {
+        search: string;
+        class_group: string;
+        status: string;
+        centre_id: string;
+    };
     learners: {
         data: Learner[];
         total: number;
@@ -41,25 +42,37 @@ interface Props {
     };
 }
 
-export default function LearnersIndex({ learners }: Props) {
-    const [search, setSearch] = useState("");
-    const [classFilter, setClassFilter] = useState("all");
-    const [statusFilter, setStatusFilter] = useState("all");
-
-    const filteredLearners = learners.data.filter((learner) => {
-        const matchesSearch =
-            `${learner.full_name} ${learner.learner_code} ${learner.centre?.name ?? ""}`
-                .toLowerCase()
-                .includes(search.toLowerCase());
-
-        const matchesClass =
-            classFilter === "all" || learner.class_group === classFilter;
-
-        const matchesStatus =
-            statusFilter === "all" || learner.status === statusFilter;
-
-        return matchesSearch && matchesClass && matchesStatus;
-    });
+export default function LearnersIndex({
+    learners,
+    centres,
+    totalLearners,
+    filters,
+}: Props) {
+    const [search, setSearch] = useState(filters.search);
+    const [classFilter, setClassFilter] = useState(
+        filters.class_group || "all",
+    );
+    const [statusFilter, setStatusFilter] = useState(filters.status || "all");
+    const [centreFilter, setCentreFilter] = useState(filters.centre_id || "all");
+    const applyFilters = () =>
+        router.get(
+            "/programme-officer/learners",
+            {
+                search: search || undefined,
+                class_group:
+                    classFilter === "all" ? undefined : classFilter,
+                status: statusFilter === "all" ? undefined : statusFilter,
+                centre_id: centreFilter === "all" ? undefined : centreFilter,
+            },
+            { preserveState: true, preserveScroll: true },
+        );
+    const clearFilters = () => {
+        setSearch("");
+        setClassFilter("all");
+        setStatusFilter("all");
+        setCentreFilter("all");
+        router.get("/programme-officer/learners");
+    };
 
     return (
         <>
@@ -68,7 +81,7 @@ export default function LearnersIndex({ learners }: Props) {
             <div className="space-y-6 p-6">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                        <p className="text-sm font-medium text-muted-foreground">
+                        <p className="text-xs py-2 font-small text-muted-foreground">
                             TSANGAYA+ / Programme Officer
                         </p>
 
@@ -98,7 +111,7 @@ export default function LearnersIndex({ learners }: Props) {
                         <Users className="size-5 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <p className="text-2xl font-bold">{learners.total}</p>
+                        <p className="text-2xl font-bold">{totalLearners}</p>
                     </CardContent>
                 </Card>
 
@@ -113,68 +126,60 @@ export default function LearnersIndex({ learners }: Props) {
                     </CardHeader>
 
                     <CardContent className="space-y-4">
-                        <div className="grid gap-3 sm:grid-cols-3">
-                            <div className="relative sm:col-span-1">
-                                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                                <Input
-                                    placeholder="Search learners..."
-                                    value={search}
-                                    onChange={(event) =>
-                                        setSearch(event.target.value)
-                                    }
-                                    className="pl-9"
-                                />
-                            </div>
+                        <DataTableFilters
+                            search={search}
+                            searchPlaceholder="Search learner, code, or centre"
+                            onSearchChange={setSearch}
+                            filters={[
+                                {
+                                    key: "class",
+                                    label: "Class",
+                                    value: classFilter,
+                                    onChange: setClassFilter,
+                                    options: [
+                                        { label: "All classes", value: "all" },
+                                        { label: "Class A", value: "Class A" },
+                                        { label: "Class B", value: "Class B" },
+                                    ],
+                                },
+                                {
+                                    key: "status",
+                                    label: "Status",
+                                    value: statusFilter,
+                                    onChange: setStatusFilter,
+                                    options: [
+                                        { label: "All statuses", value: "all" },
+                                        { label: "Active", value: "active" },
+                                        { label: "Inactive", value: "inactive" },
+                                    ],
+                                },
+                                {
+                                    key: "centre",
+                                    label: "Centre",
+                                    value: centreFilter,
+                                    onChange: setCentreFilter,
+                                    options: [
+                                        { label: "All centres", value: "all" },
+                                        ...centres.map((centre) => ({
+                                            label: centre.name,
+                                            value: String(centre.id),
+                                        })),
+                                    ],
+                                },
+                            ]}
+                            onApply={applyFilters}
+                            onClear={clearFilters}
+                        />
 
-                            <Select
-                                value={classFilter}
-                                onValueChange={setClassFilter}
-                            >
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Filter by class" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">
-                                        All Classes
-                                    </SelectItem>
-                                    <SelectItem value="Class A">
-                                        Class A
-                                    </SelectItem>
-                                    <SelectItem value="Class B">
-                                        Class B
-                                    </SelectItem>
-                                </SelectContent>
-                            </Select>
-
-                            <Select
-                                value={statusFilter}
-                                onValueChange={setStatusFilter}
-                            >
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Filter by status" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">
-                                        All Statuses
-                                    </SelectItem>
-                                    <SelectItem value="active">
-                                        Active
-                                    </SelectItem>
-                                    <SelectItem value="inactive">
-                                        Inactive
-                                    </SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-
-                        {filteredLearners.length === 0 ? (
+                        {learners.data.length === 0 ? (
                             <div className="py-12 text-center">
                                 <GraduationCap className="mx-auto mb-3 size-10 text-muted-foreground" />
 
                                 <h3 className="font-semibold">
                                     {search ||
                                     classFilter !== "all" ||
-                                    statusFilter !== "all"
+                                    statusFilter !== "all" ||
+                                    centreFilter !== "all"
                                         ? "No matching learners found"
                                         : "No learners registered yet"}
                                 </h3>
@@ -185,7 +190,7 @@ export default function LearnersIndex({ learners }: Props) {
                             </div>
                         ) : (
                             <div className="space-y-3">
-                                {filteredLearners.map((learner) => (
+                                {learners.data.map((learner) => (
                                     <div
                                         key={learner.id}
                                         className="flex flex-col gap-3 rounded-lg border p-4 sm:flex-row sm:items-center sm:justify-between"

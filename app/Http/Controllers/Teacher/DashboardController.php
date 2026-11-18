@@ -6,13 +6,51 @@ use App\Http\Controllers\Controller;
 use App\Models\AssessmentRecord;
 use App\Models\Attendance;
 use App\Models\LearningSession;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $filters = $request->validate([
+            'search' => ['nullable', 'string', 'max:100'],
+            'status' => [
+                'nullable',
+                'in:Scheduled,Delivered,Cancelled,Rescheduled',
+            ],
+        ]);
+
         $teacherId = auth()->id();
+        $sessions = LearningSession::with([
+            'centre',
+            'subject',
+        ])
+            ->where('teacher_id', $teacherId)
+            ->when($filters['search'] ?? null, function ($query, $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('topic', 'like', "%{$search}%")
+                        ->orWhere('class_group', 'like', "%{$search}%")
+                        ->orWhereHas(
+                            'centre',
+                            fn ($centreQuery) => $centreQuery
+                                ->where('name', 'like', "%{$search}%")
+                        )
+                        ->orWhereHas(
+                            'subject',
+                            fn ($subjectQuery) => $subjectQuery
+                                ->where('name', 'like', "%{$search}%")
+                        );
+                });
+            })
+            ->when(
+                $filters['status'] ?? null,
+                fn ($query, $status) => $query->where('status', $status)
+            )
+            ->latest('session_date')
+            ->paginate(10)
+            ->withQueryString();
+
         $attendanceRecords = Attendance::whereHas(
             'learningSession',
             fn ($query) => $query->where('teacher_id', $teacherId)
@@ -43,13 +81,11 @@ class DashboardController extends Controller
                 $teacherId
             )->count(),
 
-            'sessions' => LearningSession::with([
-                'centre',
-                'subject',
-            ])
-                ->where('teacher_id', $teacherId)
-                ->latest('session_date')
-                ->paginate(10),
+            'sessions' => $sessions,
+            'filters' => [
+                'search' => $filters['search'] ?? '',
+                'status' => $filters['status'] ?? '',
+            ],
         ]);
     }
 }

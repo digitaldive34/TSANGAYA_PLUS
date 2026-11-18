@@ -14,6 +14,7 @@ use App\Http\Controllers\ProgrammeOfficer\DashboardController as ProgrammeOffice
 use App\Http\Controllers\ProgrammeOfficer\LearnerController;
 use App\Http\Controllers\ProgrammeOfficer\WelfareController;
 use App\Http\Controllers\ProgrammeOfficer\MonitoringController;
+use App\Http\Controllers\ProgrammeOfficer\ActivityController as ProgrammeOfficerActivityController;
 
 use App\Http\Controllers\Teacher\DashboardController as TeacherDashboardController;
 use App\Http\Controllers\Teacher\LearningSessionController as TeacherLearningSessionController;
@@ -88,6 +89,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/admin/users', [UserController::class, 'store'])
             ->name('admin.users.store');
 
+        Route::get('/admin/users/{user}', [UserController::class, 'show'])
+            ->name('admin.users.show');
+
         Route::get('/admin/users/{user}/edit', [UserController::class, 'edit'])
             ->name('admin.users.edit');
 
@@ -107,6 +111,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('/programme-officer/dashboard', [ProgrammeOfficerDashboardController::class, 'index'])
             ->name('programme-officer.dashboard');
+
+        Route::get('/programme-officer/monitoring/activities', [ProgrammeOfficerActivityController::class, 'index'])
+            ->name('programme-officer.monitoring.activities');
 
 
         // Learners

@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import DataTableFilters from "@/components/data-table-filters";
 import {
     Table,
     TableBody,
@@ -53,6 +54,8 @@ export default function AttendanceMonitoring({
 }: Props) {
     const [centreId, setCentreId] = useState(filters.centre_id ?? "");
     const [sessionId, setSessionId] = useState(filters.session_id ?? "");
+    const [search, setSearch] = useState("");
+    const [attendanceStatus, setAttendanceStatus] = useState("all");
 
     const applyFilters = () => {
         router.get(
@@ -68,6 +71,8 @@ export default function AttendanceMonitoring({
     const clearFilters = () => {
         setCentreId("");
         setSessionId("");
+        setSearch("");
+        setAttendanceStatus("all");
         router.get("/programme-officer/monitoring/attendance");
     };
 
@@ -152,6 +157,28 @@ export default function AttendanceMonitoring({
                                 </Button>
                             </div>
                         </div>
+                        <div className="mt-4">
+                            <DataTableFilters
+                                search={search}
+                                searchPlaceholder="Search learner name or code"
+                                onSearchChange={setSearch}
+                                filters={[
+                                    {
+                                        key: "attendance-status",
+                                        label: "Attendance",
+                                        value: attendanceStatus,
+                                        onChange: setAttendanceStatus,
+                                        options: [
+                                            { label: "All statuses", value: "all" },
+                                            { label: "Present", value: "Present" },
+                                            { label: "Absent", value: "Absent" },
+                                        ],
+                                    },
+                                ]}
+                                onApply={applyFilters}
+                                onClear={clearFilters}
+                            />
+                        </div>
                     </CardContent>
                 </Card>
 
@@ -164,10 +191,20 @@ export default function AttendanceMonitoring({
                 ) : (
                     sessions.map((session) => {
                         const records = attendance[String(session.id)] ?? [];
-                        const present = records.filter(
+                        const filteredRecords = records.filter((record) => {
+                            const matchesSearch =
+                                `${record.learner?.full_name ?? ""} ${record.learner?.learner_code ?? ""}`
+                                    .toLowerCase()
+                                    .includes(search.toLowerCase());
+                            const matchesStatus =
+                                attendanceStatus === "all" ||
+                                record.status === attendanceStatus;
+                            return matchesSearch && matchesStatus;
+                        });
+                        const present = filteredRecords.filter(
                             (record) => record.status === "Present",
                         ).length;
-                        const absent = records.filter(
+                        const absent = filteredRecords.filter(
                             (record) => record.status === "Absent",
                         ).length;
 
@@ -207,6 +244,10 @@ export default function AttendanceMonitoring({
                                             No attendance has been recorded for
                                             this session.
                                         </p>
+                                    ) : filteredRecords.length === 0 ? (
+                                        <p className="py-4 text-sm text-muted-foreground">
+                                            No attendance records match the current search and filters.
+                                        </p>
                                     ) : (
                                         <div className="overflow-x-auto">
                                             <Table>
@@ -228,7 +269,7 @@ export default function AttendanceMonitoring({
                                                 </TableHeader>
 
                                                 <TableBody>
-                                                    {records.map((record) => (
+                                                    {filteredRecords.map((record) => (
                                                         <TableRow
                                                             key={record.id}
                                                         >

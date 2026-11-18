@@ -13,16 +13,60 @@ use Inertia\Inertia;
 
 class LearningSessionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $filters = $request->validate([
+            'search' => ['nullable', 'string', 'max:100'],
+            'status' => [
+                'nullable',
+                'in:Scheduled,Delivered,Cancelled,Rescheduled',
+            ],
+            'class_group' => ['nullable', 'in:Class A,Class B'],
+        ]);
+
         return Inertia::render('admin/learning-sessions/index', [
             'sessions' => LearningSession::with([
                 'centre',
                 'subject',
                 'teacher',
             ])
+                ->when($filters['search'] ?? null, function ($query, $search) {
+                    $query->where(function ($query) use ($search) {
+                        $query->where('topic', 'like', "%{$search}%")
+                            ->orWhereHas(
+                                'centre',
+                                fn ($centreQuery) => $centreQuery
+                                    ->where('name', 'like', "%{$search}%")
+                            )
+                            ->orWhereHas(
+                                'subject',
+                                fn ($subjectQuery) => $subjectQuery
+                                    ->where('name', 'like', "%{$search}%")
+                            )
+                            ->orWhereHas(
+                                'teacher',
+                                fn ($teacherQuery) => $teacherQuery
+                                    ->where('name', 'like', "%{$search}%")
+                            );
+                    });
+                })
+                ->when(
+                    $filters['status'] ?? null,
+                    fn ($query, $status) => $query->where('status', $status)
+                )
+                ->when(
+                    $filters['class_group'] ?? null,
+                    fn ($query, $classGroup) =>
+                        $query->where('class_group', $classGroup)
+                )
                 ->latest('session_date')
-                ->paginate(10),
+                ->paginate(10)
+                ->withQueryString(),
+            'filters' => [
+                'search' => $filters['search'] ?? '',
+                'status' => $filters['status'] ?? '',
+                'class_group' => $filters['class_group'] ?? '',
+            ],
         ]);
     }
 

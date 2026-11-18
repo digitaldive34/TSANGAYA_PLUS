@@ -12,15 +12,56 @@ use Illuminate\Http\Request;
 
 class WelfareController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $filters = $request->validate([
+            'search' => ['nullable', 'string', 'max:100'],
+            'category' => [
+                'nullable',
+                'in:Clothing,Health,Learning Materials,Other',
+            ],
+            'status' => ['nullable', 'in:Open,In Progress,Resolved'],
+        ]);
+
         return Inertia::render('programme-officer/welfare/index', [
             'welfareNeeds' => WelfareNeed::with([
                 'learner.centre',
                 'recordedBy',
             ])
+                ->when($filters['search'] ?? null, function ($query, $search) {
+                    $query->where(function ($query) use ($search) {
+                        $query->where('description', 'like', "%{$search}%")
+                            ->orWhereHas(
+                                'learner',
+                                fn ($learnerQuery) => $learnerQuery
+                                    ->where('full_name', 'like', "%{$search}%")
+                                    ->orWhere('learner_code', 'like', "%{$search}%")
+                            )
+                            ->orWhereHas(
+                                'learner.centre',
+                                fn ($centreQuery) => $centreQuery
+                                    ->where('name', 'like', "%{$search}%")
+                            );
+                    });
+                })
+                ->when(
+                    $filters['category'] ?? null,
+                    fn ($query, $category) =>
+                        $query->where('category', $category)
+                )
+                ->when(
+                    $filters['status'] ?? null,
+                    fn ($query, $status) => $query->where('status', $status)
+                )
                 ->latest()
-                ->paginate(10),
+                ->paginate(10)
+                ->withQueryString(),
+            'totalWelfareNeeds' => WelfareNeed::count(),
+            'filters' => [
+                'search' => $filters['search'] ?? '',
+                'category' => $filters['category'] ?? '',
+                'status' => $filters['status'] ?? '',
+            ],
         ]);
     }
 

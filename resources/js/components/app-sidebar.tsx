@@ -1,4 +1,4 @@
-import { Link, usePage } from "@inertiajs/react";
+import { Link, usePage } from '@inertiajs/react';
 import {
     Activity,
     BookOpen,
@@ -8,11 +8,11 @@ import {
     HeartHandshake,
     LayoutDashboard,
     Users,
-} from "lucide-react";
+} from 'lucide-react';
 
-import AppLogo from "@/components/app-logo";
-import { NavMain } from "@/components/nav-main";
-import { NavUser } from "@/components/nav-user";
+import AppLogo from '@/components/app-logo';
+import { NavMain } from '@/components/nav-main';
+import { NavUser } from '@/components/nav-user';
 import {
     Sidebar,
     SidebarContent,
@@ -21,13 +21,13 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-} from "@/components/ui/sidebar";
+} from '@/components/ui/sidebar';
 
-import admin from "@/routes/admin";
-import programmeOfficer from "@/routes/programme-officer";
-import teacher from "@/routes/teacher";
-import { dashboard } from "@/routes";
-import type { NavItem } from "@/types";
+import admin from '@/routes/admin';
+import programmeOfficer from '@/routes/programme-officer';
+import teacher from '@/routes/teacher';
+import { dashboard } from '@/routes';
+import type { NavItem } from '@/types';
 
 export function AppSidebar() {
     const { auth } = usePage().props;
@@ -36,67 +36,72 @@ export function AppSidebar() {
     let dashboardUrl = dashboard();
     let navigationItems: NavItem[] = [];
 
-    if (role === "Admin") {
+    if (role === 'Admin') {
         dashboardUrl = admin.dashboard();
 
         navigationItems = [
             {
-                title: "Dashboard",
+                title: 'Dashboard',
                 href: admin.dashboard(),
                 icon: LayoutDashboard,
             },
             {
-                title: "Centres",
+                title: 'Centres',
                 href: admin.centres.index(),
                 icon: Building2,
             },
             {
-                title: "Learning Sessions",
+                title: 'Learning Sessions',
                 href: admin.learningSessions.index(),
                 icon: BookOpen,
             },
             {
-                title: "Staff Management",
+                title: 'Staff Management',
                 href: admin.users.index(),
                 icon: Users,
             },
             {
-                title: "Activity Logs",
+                title: 'Activity Logs',
                 href: admin.activities.index(),
                 icon: Activity,
             },
         ];
-    } else if (role === "Programme Officer") {
+    } else if (role === 'Programme Officer') {
         dashboardUrl = programmeOfficer.dashboard();
 
         navigationItems = [
             {
-                title: "Dashboard",
+                title: 'Dashboard',
                 href: programmeOfficer.dashboard(),
                 icon: LayoutDashboard,
             },
             {
-                title: "Learners",
+                title: 'Learners',
                 href: programmeOfficer.learners.index(),
                 icon: GraduationCap,
             },
             {
-                title: "Welfare Support",
+                title: 'Welfare Support',
                 href: programmeOfficer.welfare.index(),
                 icon: HeartHandshake,
             },
+            {
+                title: 'Teacher Activity',
+                href: '/programme-officer/monitoring/activities',
+                icon: Activity,
+            },
         ];
-    } else if (role === "Teacher") {
+    } else if (role === 'Teacher') {
         dashboardUrl = teacher.dashboard();
 
         navigationItems = [
             {
-                title: "Dashboard",
+                title: 'Dashboard',
                 href: teacher.dashboard(),
                 icon: LayoutDashboard,
             },
             {
-                title: "My Assessments",
+                title: 'My Assessments',
                 href: teacher.assessments.index(),
                 icon: ClipboardCheck,
             },

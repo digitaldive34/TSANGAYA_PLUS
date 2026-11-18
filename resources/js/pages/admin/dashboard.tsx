@@ -1,80 +1,33 @@
-import { Head, router } from "@inertiajs/react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Head, router } from '@inertiajs/react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import {
-    Bell,
     Plus,
     Users,
     GraduationCap,
     Building2,
-    BookOpen,
     CalendarDays,
     ClipboardCheck,
     UserPlus,
-    Activity as ActivityIcon,
-} from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import admin from "@/routes/admin";
-
-interface ActivityRecord {
-    id: number;
-    user: {
-        name: string;
-    } | null;
-    role: string | null;
-    action: string;
-    description: string;
-    created_at: string;
-}
+} from 'lucide-react';
+import DashboardStatCard from '@/components/dashboard-stat-card';
+import ActivityTimeline, {
+    type ActivityEntry,
+} from '@/components/activity-timeline';
 
 interface AdminDashboardProps {
     totalLearners: number;
-    activeLearners: number;
     activeCentres: number;
     staffMembers: number;
-    totalSessions: number;
     scheduledSessions: number;
     deliveredSessions: number;
-    recentActivities: ActivityRecord[];
+    recentActivities: ActivityEntry[];
 }
-
-const getInitials = (name: string) => {
-    return name
-        .split(" ")
-        .map((part) => part[0])
-        .join("")
-        .substring(0, 2)
-        .toUpperCase();
-};
-
-const formatAction = (action: string) => {
-    return action
-        .split(".")
-        .map((word) =>
-            word
-                .replace(/_/g, " ")
-                .replace(/\b\w/g, (char) => char.toUpperCase()),
-        )
-        .join(" ");
-};
-
-const formatDate = (date: string) => {
-    return new Date(date).toLocaleString("en-GB", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-    });
-};
 
 export default function AdminDashboard({
     totalLearners,
-    activeLearners,
     activeCentres,
     staffMembers,
-    totalSessions,
     scheduledSessions,
     deliveredSessions,
     recentActivities,
@@ -83,160 +36,65 @@ export default function AdminDashboard({
         <>
             <Head title="Admin Dashboard" />
 
-            <div className="min-h-screen space-y-6 bg-slate-50 p-6">
+            <div className="min-h-screen space-y-5 p-4 sm:p-5 lg:p-6">
                 {/* Welcome Section */}
                 <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                     <div>
-                        <p className="text-sm font-medium text-slate-500">
+                        <p className="font-small py-3 text-xs text-slate-500">
                             TSANGAYA+ / Administration
                         </p>
 
-                        <h1 className="mt-2 text-2xl font-bold tracking-tight text-slate-900">
+                        <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900">
                             Welcome back, Admin
                         </h1>
 
-                        <p className="mt-1 text-sm text-slate-500">
+                        <p className="text-sm text-slate-500">
                             Here's an overview of your programme today.
                         </p>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                        <Button variant="outline" size="icon">
-                            <Bell className="size-4" />
-                        </Button>
-
-                        <Avatar>
-                            <AvatarFallback className="bg-slate-900 text-white">
-                                AD
-                            </AvatarFallback>
-                        </Avatar>
                     </div>
                 </div>
 
                 {/* Programme Statistics */}
-                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-500">
-                                Total Learners
-                            </CardTitle>
-                            <GraduationCap className="size-5 text-slate-500" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold text-slate-900">
-                                {totalLearners}
-                            </div>
-                            <p className="text-xs text-slate-500">
-                                Across all centres
-                            </p>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-500">
-                                Active Learners
-                            </CardTitle>
-                            <Users className="size-5 text-slate-500" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold text-slate-900">
-                                {activeLearners}
-                            </div>
-                            <p className="text-xs text-slate-500">
-                                Currently enrolled
-                            </p>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-500">
-                                Active Centres
-                            </CardTitle>
-                            <Building2 className="size-5 text-slate-500" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold text-slate-900">
-                                {activeCentres}
-                            </div>
-                            <p className="text-xs text-slate-500">
-                                Registered centres
-                            </p>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-500">
-                                Staff Members
-                            </CardTitle>
-                            <Users className="size-5 text-slate-500" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold text-slate-900">
-                                {staffMembers}
-                            </div>
-                            <p className="text-xs text-slate-500">
-                                Across all roles
-                            </p>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-500">
-                                Learning Sessions
-                            </CardTitle>
-                            <BookOpen className="size-5 text-slate-500" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold text-slate-900">
-                                {totalSessions}
-                            </div>
-                            <p className="text-xs text-slate-500">
-                                Sessions created
-                            </p>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-500">
-                                Scheduled Sessions
-                            </CardTitle>
-                            <CalendarDays className="size-5 text-slate-500" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold text-slate-900">
-                                {scheduledSessions}
-                            </div>
-                            <p className="text-xs text-slate-500">
-                                Planned learning sessions
-                            </p>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-500">
-                                Delivered Sessions
-                            </CardTitle>
-                            <ClipboardCheck className="size-5 text-slate-500" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold text-slate-900">
-                                {deliveredSessions}
-                            </div>
-                            <p className="text-xs text-slate-500">
-                                Completed learning sessions
-                            </p>
-                        </CardContent>
-                    </Card>
+                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+                    <DashboardStatCard
+                        label="Total Learners"
+                        value={totalLearners}
+                        description="Registered across centres"
+                        icon={GraduationCap}
+                        tone="blue"
+                    />
+                    <DashboardStatCard
+                        label="Active Centres"
+                        value={activeCentres}
+                        description="Currently operating"
+                        icon={Building2}
+                        tone="teal"
+                    />
+                    <DashboardStatCard
+                        label="Staff Members"
+                        value={staffMembers}
+                        description="Across all roles"
+                        icon={Users}
+                        tone="navy"
+                    />
+                    <DashboardStatCard
+                        label="Scheduled Sessions"
+                        value={scheduledSessions}
+                        description="Planned learning sessions"
+                        icon={CalendarDays}
+                        tone="amber"
+                    />
+                    <DashboardStatCard
+                        label="Delivered Sessions"
+                        value={deliveredSessions}
+                        description="Completed learning sessions"
+                        icon={ClipboardCheck}
+                        tone="violet"
+                    />
                 </div>
 
                 {/* Quick Actions */}
-                <div className="space-y-4">
+                <div className="space-y-3">
                     <div>
                         <h2 className="text-lg font-semibold text-slate-900">
                             Quick Actions
@@ -246,7 +104,7 @@ export default function AdminDashboard({
                         </p>
                     </div>
 
-                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                         <Card className="transition-shadow hover:shadow-md">
                             <CardContent className="flex items-center justify-between p-5">
                                 <div>
@@ -262,7 +120,7 @@ export default function AdminDashboard({
                                     size="icon"
                                     variant="outline"
                                     onClick={() =>
-                                        router.visit("/admin/users/create")
+                                        router.visit('/admin/users/create')
                                     }
                                 >
                                     <UserPlus className="size-4" />
@@ -284,7 +142,7 @@ export default function AdminDashboard({
                                 <Button
                                     size="icon"
                                     variant="outline"
-                                    onClick={() => router.visit("/admin/users")}
+                                    onClick={() => router.visit('/admin/users')}
                                 >
                                     <Users className="size-4" />
                                 </Button>
@@ -306,7 +164,7 @@ export default function AdminDashboard({
                                     size="icon"
                                     variant="outline"
                                     onClick={() =>
-                                        router.visit("/admin/centres/create")
+                                        router.visit('/admin/centres/create')
                                     }
                                 >
                                     <Plus className="size-4" />
@@ -330,7 +188,7 @@ export default function AdminDashboard({
                                     variant="outline"
                                     onClick={() =>
                                         router.visit(
-                                            "/admin/learning-sessions/create",
+                                            '/admin/learning-sessions/create',
                                         )
                                     }
                                 >
@@ -349,78 +207,24 @@ export default function AdminDashboard({
                                 Recent Activities
                             </CardTitle>
                             <p className="mt-1 text-sm text-slate-500">
-                                A record of recent activities across the
-                                programme.
+                                A timeline of recent actions by all staff.
                             </p>
                         </div>
 
                         <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => router.visit("/admin/activities")}
+                            onClick={() => router.visit('/admin/activities')}
                         >
                             View All
                         </Button>
                     </CardHeader>
 
-                    <CardContent className="space-y-5">
-                        {recentActivities.length > 0 ? (
-                            recentActivities.map((activity) => (
-                                <div
-                                    key={activity.id}
-                                    className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center"
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <Avatar>
-                                            <AvatarFallback className="bg-slate-100 text-slate-700">
-                                                {activity.user
-                                                    ? getInitials(
-                                                          activity.user.name,
-                                                      )
-                                                    : "SY"}
-                                            </AvatarFallback>
-                                        </Avatar>
-
-                                        <div>
-                                            <p className="text-sm font-medium text-slate-900">
-                                                {activity.user?.name ??
-                                                    "System"}
-                                                {activity.role && (
-                                                    <span className="ml-2 text-xs font-normal text-slate-500">
-                                                        ({activity.role})
-                                                    </span>
-                                                )}
-                                            </p>
-
-                                            <p className="mt-1 text-sm text-slate-600">
-                                                {activity.description}
-                                            </p>
-
-                                            <p className="mt-1 text-xs text-slate-400">
-                                                {formatDate(
-                                                    activity.created_at,
-                                                )}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <Badge variant="secondary">
-                                        {formatAction(activity.action)}
-                                    </Badge>
-                                </div>
-                            ))
-                        ) : (
-                            <div className="flex flex-col items-center justify-center py-8 text-center">
-                                <ActivityIcon className="mb-3 size-8 text-slate-400" />
-                                <p className="font-medium text-slate-700">
-                                    No activities recorded yet
-                                </p>
-                                <p className="mt-1 text-sm text-slate-500">
-                                    Activities will appear here as staff use the
-                                    platform.
-                                </p>
-                            </div>
-                        )}
+                    <CardContent>
+                        <ActivityTimeline
+                            activities={recentActivities}
+                            emptyMessage="Staff actions will appear here as they use the platform."
+                        />
                     </CardContent>
                 </Card>
             </div>

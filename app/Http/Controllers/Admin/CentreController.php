@@ -10,10 +10,34 @@ use Inertia\Inertia;
 
 class CentreController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $filters = $request->validate([
+            'search' => ['nullable', 'string', 'max:100'],
+            'status' => ['nullable', 'in:active,inactive'],
+        ]);
+
         return Inertia::render('admin/centres/index', [
-            'centres' => Centre::latest()->paginate(10),
+            'centres' => Centre::query()
+                ->when($filters['search'] ?? null, function ($query, $search) {
+                    $query->where(function ($query) use ($search) {
+                        $query->where('name', 'like', "%{$search}%")
+                            ->orWhere('location', 'like', "%{$search}%");
+                    });
+                })
+                ->when(
+                    $filters['status'] ?? null,
+                    fn ($query, $status) => $query->where('status', $status)
+                )
+                ->latest()
+                ->paginate(10)
+                ->withQueryString(),
+            'totalCentres' => Centre::count(),
+            'activeCentres' => Centre::where('status', 'active')->count(),
+            'filters' => [
+                'search' => $filters['search'] ?? '',
+                'status' => $filters['status'] ?? '',
+            ],
         ]);
     }
 

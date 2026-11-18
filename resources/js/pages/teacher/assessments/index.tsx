@@ -1,4 +1,5 @@
 import { Head, Link } from "@inertiajs/react";
+import { useState } from "react";
 import { BookOpen, ClipboardList } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -11,6 +12,7 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import teacher from "@/routes/teacher";
+import DataTableFilters from "@/components/data-table-filters";
 
 interface AssessmentRegister {
     centre_id: number;
@@ -29,6 +31,19 @@ interface AssessmentIndexProps {
 }
 
 export default function AssessmentIndex({ registers }: AssessmentIndexProps) {
+    const [search, setSearch] = useState("");
+    const [classGroup, setClassGroup] = useState("all");
+    const filteredRegisters = registers.filter((register) => {
+        const matchesSearch =
+            `${register.centre.name} ${register.subject.name}`
+                .toLowerCase()
+                .includes(search.toLowerCase());
+        return (
+            matchesSearch &&
+            (classGroup === "all" || register.class_group === classGroup)
+        );
+    });
+
     return (
         <>
             <Head title="Assessment Registers" />
@@ -45,9 +60,28 @@ export default function AssessmentIndex({ registers }: AssessmentIndexProps) {
                     </p>
                 </div>
 
-                {registers.length > 0 ? (
+                <DataTableFilters
+                    search={search}
+                    searchPlaceholder="Search centre or subject"
+                    onSearchChange={setSearch}
+                    filters={[
+                        {
+                            key: "class",
+                            label: "Class",
+                            value: classGroup,
+                            onChange: setClassGroup,
+                            options: [
+                                { label: "All classes", value: "all" },
+                                { label: "Class A", value: "Class A" },
+                                { label: "Class B", value: "Class B" },
+                            ],
+                        },
+                    ]}
+                />
+
+                {filteredRegisters.length > 0 ? (
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                        {registers.map((register) => (
+                        {filteredRegisters.map((register) => (
                             <Card
                                 key={`${register.centre_id}-${register.subject_id}-${register.class_group}`}
                             >
@@ -100,7 +134,9 @@ export default function AssessmentIndex({ registers }: AssessmentIndexProps) {
                             <ClipboardList className="mx-auto mb-4 h-10 w-10 text-muted-foreground" />
 
                             <h3 className="font-semibold">
-                                No assessment registers available
+                                {search || classGroup !== "all"
+                                    ? "No matching assessment registers"
+                                    : "No assessment registers available"}
                             </h3>
 
                             <p className="mt-2 text-sm text-muted-foreground">

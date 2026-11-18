@@ -26,6 +26,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import DataTableFilters from "@/components/data-table-filters";
 
 import teacher from "@/routes/teacher";
 
@@ -79,6 +80,27 @@ export default function AssessmentShow({
     learners,
     assessments,
 }: AssessmentShowProps) {
+    const [search, setSearch] = React.useState("");
+    const [assessmentFilter, setAssessmentFilter] = React.useState("all");
+    const filteredLearners = learners.filter((learner) => {
+        const record = assessments[learner.id]?.[0];
+        const hasScores = [
+            record?.baseline_score,
+            record?.midline_score,
+            record?.endline_score,
+        ].some((score) => score !== null && score !== undefined);
+        const matchesAssessment =
+            assessmentFilter === "all" ||
+            (assessmentFilter === "scored" && hasScores) ||
+            (assessmentFilter === "not-scored" && !hasScores);
+        return (
+            `${learner.full_name} ${learner.learner_code}`
+                .toLowerCase()
+                .includes(search.toLowerCase()) &&
+            matchesAssessment
+        );
+    });
+
     return (
         <>
             <Head title="Assessment Register" />
@@ -125,7 +147,25 @@ export default function AssessmentShow({
                         </CardDescription>
                     </CardHeader>
 
-                    <CardContent>
+                    <CardContent className="space-y-4">
+                        <DataTableFilters
+                            search={search}
+                            searchPlaceholder="Search learner name or code"
+                            onSearchChange={setSearch}
+                            filters={[
+                                {
+                                    key: "assessment-status",
+                                    label: "Assessment",
+                                    value: assessmentFilter,
+                                    onChange: setAssessmentFilter,
+                                    options: [
+                                        { label: "All learners", value: "all" },
+                                        { label: "Scores recorded", value: "scored" },
+                                        { label: "No scores recorded", value: "not-scored" },
+                                    ],
+                                },
+                            ]}
+                        />
                         {learners.length === 0 ? (
                             <p className="py-8 text-center text-muted-foreground">
                                 No active learners found in this class.
@@ -148,7 +188,7 @@ export default function AssessmentShow({
                                     </TableHeader>
 
                                     <TableBody>
-                                        {learners.map((learner) => (
+                                        {filteredLearners.map((learner) => (
                                             <LearnerAssessmentRow
                                                 key={learner.id}
                                                 learner={learner}
@@ -158,6 +198,16 @@ export default function AssessmentShow({
                                                 classGroup={register.class_group}
                                             />
                                         ))}
+                                        {filteredLearners.length === 0 && (
+                                            <TableRow>
+                                                <TableCell
+                                                    colSpan={9}
+                                                    className="py-8 text-center text-muted-foreground"
+                                                >
+                                                    No learners match the current search and filter.
+                                                </TableCell>
+                                            </TableRow>
+                                        )}
                                     </TableBody>
                                 </Table>
                             </div>

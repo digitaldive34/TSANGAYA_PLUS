@@ -43,7 +43,7 @@ export default function CreateCentre() {
                     </Button>
 
                     <div>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-xs py-2 font-small text-muted-foreground">
                             TSANGAYA+ / Centre Management
                         </p>
                         <h1 className="text-2xl font-bold tracking-tight">

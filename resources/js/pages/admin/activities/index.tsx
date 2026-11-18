@@ -1,41 +1,23 @@
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, router } from '@inertiajs/react';
+import { useState } from 'react';
 import {
     Activity as ActivityIcon,
     ChevronLeft,
     ChevronRight,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { Badge } from "@/components/ui/badge";
+import ActivityTimeline, {
+    type ActivityEntry,
+} from '@/components/activity-timeline';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-
-interface ActivityUser {
-    id: number;
-    name: string;
-}
-
-interface Activity {
-    id: number;
-    user: ActivityUser | null;
-    role: string | null;
-    action: string;
-    description: string;
-    created_at: string;
-}
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import DataTableFilters from '@/components/data-table-filters';
 
 interface PaginationLink {
     url: string | null;
@@ -44,7 +26,7 @@ interface PaginationLink {
 }
 
 interface PaginatedActivities {
-    data: Activity[];
+    data: ActivityEntry[];
     links: PaginationLink[];
     total: number;
     current_page: number;
@@ -53,24 +35,28 @@ interface PaginatedActivities {
 
 interface Props {
     activities: PaginatedActivities;
+    filters: {
+        search: string;
+        role: string;
+    };
 }
 
-export default function ActivityIndex({ activities }: Props) {
-    const formatAction = (action: string) => {
-        return action
-            .replaceAll(".", " ")
-            .replaceAll("_", " ")
-            .replace(/\b\w/g, (letter) => letter.toUpperCase());
-    };
-
-    const formatDate = (date: string) => {
-        return new Date(date).toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-        });
+export default function ActivityIndex({ activities, filters }: Props) {
+    const [search, setSearch] = useState(filters.search);
+    const [role, setRole] = useState(filters.role || 'all');
+    const applyFilters = () =>
+        router.get(
+            '/admin/activities',
+            {
+                search: search || undefined,
+                role: role === 'all' ? undefined : role,
+            },
+            { preserveState: true, preserveScroll: true },
+        );
+    const clearFilters = () => {
+        setSearch('');
+        setRole('all');
+        router.get('/admin/activities');
     };
 
     return (
@@ -97,12 +83,44 @@ export default function ActivityIndex({ activities }: Props) {
                     <CardHeader>
                         <CardTitle>System Activities</CardTitle>
                         <CardDescription>
-                            A record of actions performed by Admins, Programme
-                            Officers and Teachers.
+                            A chronological feed of activity across all staff
+                            roles.
                         </CardDescription>
                     </CardHeader>
 
                     <CardContent>
+                        <div className="mb-4">
+                            <DataTableFilters
+                                search={search}
+                                searchPlaceholder="Search user, role, action, or description"
+                                onSearchChange={setSearch}
+                                filters={[
+                                    {
+                                        key: 'role',
+                                        label: 'Role',
+                                        value: role,
+                                        onChange: setRole,
+                                        options: [
+                                            {
+                                                label: 'All roles',
+                                                value: 'all',
+                                            },
+                                            { label: 'Admin', value: 'Admin' },
+                                            {
+                                                label: 'Programme Officer',
+                                                value: 'Programme Officer',
+                                            },
+                                            {
+                                                label: 'Teacher',
+                                                value: 'Teacher',
+                                            },
+                                        ],
+                                    },
+                                ]}
+                                onApply={applyFilters}
+                                onClear={clearFilters}
+                            />
+                        </div>
                         <div className="mb-4">
                             <p className="text-sm text-muted-foreground">
                                 Total recorded activities
@@ -112,70 +130,19 @@ export default function ActivityIndex({ activities }: Props) {
                             </p>
                         </div>
 
-                        <div className="overflow-x-auto">
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>User</TableHead>
-                                        <TableHead>Role</TableHead>
-                                        <TableHead>Action</TableHead>
-                                        <TableHead>Description</TableHead>
-                                        <TableHead>Date & Time</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-
-                                <TableBody>
-                                    {activities.data.length > 0 ? (
-                                        activities.data.map((activity) => (
-                                            <TableRow key={activity.id}>
-                                                <TableCell className="font-medium">
-                                                    {activity.user?.name ??
-                                                        "Deleted User"}
-                                                </TableCell>
-
-                                                <TableCell>
-                                                    <Badge variant="outline">
-                                                        {activity.role ??
-                                                            "Unknown"}
-                                                    </Badge>
-                                                </TableCell>
-
-                                                <TableCell>
-                                                    {formatAction(
-                                                        activity.action,
-                                                    )}
-                                                </TableCell>
-
-                                                <TableCell className="max-w-sm whitespace-normal">
-                                                    {activity.description}
-                                                </TableCell>
-
-                                                <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
-                                                    {formatDate(
-                                                        activity.created_at,
-                                                    )}
-                                                </TableCell>
-                                            </TableRow>
-                                        ))
-                                    ) : (
-                                        <TableRow>
-                                            <TableCell
-                                                colSpan={5}
-                                                className="h-32 text-center text-muted-foreground"
-                                            >
-                                                No activities have been recorded
-                                                yet.
-                                            </TableCell>
-                                        </TableRow>
-                                    )}
-                                </TableBody>
-                            </Table>
-                        </div>
+                        <ActivityTimeline
+                            activities={activities.data}
+                            emptyMessage={
+                                search || role !== 'all'
+                                    ? 'No activities match this search or role.'
+                                    : 'No staff activity has been recorded yet.'
+                            }
+                        />
 
                         {activities.last_page > 1 && (
                             <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
                                 <p className="text-sm text-muted-foreground">
-                                    Page {activities.current_page} of{" "}
+                                    Page {activities.current_page} of{' '}
                                     {activities.last_page}
                                 </p>
 
@@ -209,8 +176,8 @@ export default function ActivityIndex({ activities }: Props) {
                                                 key={index}
                                                 variant={
                                                     link.active
-                                                        ? "default"
-                                                        : "outline"
+                                                        ? 'default'
+                                                        : 'outline'
                                                 }
                                                 size="sm"
                                                 disabled={!link.url}

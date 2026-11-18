@@ -1,4 +1,5 @@
 import { Head, Link, router } from "@inertiajs/react";
+import { useMemo, useState } from "react";
 import {
     ArrowLeft,
     CalendarDays,
@@ -24,6 +25,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import DataTableFilters from "@/components/data-table-filters";
 
 import teacher from "@/routes/teacher";
 
@@ -58,6 +60,23 @@ interface SessionShowProps {
 }
 
 export default function TeacherSessionShow({ session }: SessionShowProps) {
+    const [search, setSearch] = useState("");
+    const [attendanceStatus, setAttendanceStatus] = useState("all");
+    const filteredAttendance = useMemo(
+        () =>
+            session.attendances.filter((attendance) => {
+                const matchesSearch =
+                    `${attendance.learner.full_name} ${attendance.learner.learner_code}`
+                        .toLowerCase()
+                        .includes(search.toLowerCase());
+                const matchesStatus =
+                    attendanceStatus === "all" ||
+                    attendance.status === attendanceStatus;
+                return matchesSearch && matchesStatus;
+            }),
+        [session.attendances, search, attendanceStatus],
+    );
+
     const statusVariant =
         session.status === "Delivered"
             ? "default"
@@ -174,8 +193,8 @@ export default function TeacherSessionShow({ session }: SessionShowProps) {
                     <CardContent>
                         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                             <p className="text-sm text-muted-foreground">
-                                {session.attendances.length} learner(s) have
-                                attendance records.
+                                Showing {filteredAttendance.length} of{" "}
+                                {session.attendances.length} attendance record(s).
                             </p>
 
                             {session.status === "Scheduled" && (
@@ -215,6 +234,32 @@ export default function TeacherSessionShow({ session }: SessionShowProps) {
                                     Learner Attendance
                                 </h3>
 
+                                <div className="mb-4">
+                                    <DataTableFilters
+                                        search={search}
+                                        searchPlaceholder="Search learner name or code"
+                                        onSearchChange={setSearch}
+                                        filters={[
+                                            {
+                                                key: "attendance-status",
+                                                label: "Attendance",
+                                                value: attendanceStatus,
+                                                onChange: setAttendanceStatus,
+                                                options: [
+                                                    { label: "All statuses", value: "all" },
+                                                    { label: "Present", value: "Present" },
+                                                    { label: "Absent", value: "Absent" },
+                                                ],
+                                            },
+                                        ]}
+                                    />
+                                </div>
+
+                                {filteredAttendance.length === 0 ? (
+                                    <p className="py-6 text-center text-sm text-muted-foreground">
+                                        No attendance records match the current search and filter.
+                                    </p>
+                                ) : (
                                 <Table>
                                     <TableHeader>
                                         <TableRow>
@@ -225,7 +270,7 @@ export default function TeacherSessionShow({ session }: SessionShowProps) {
                                     </TableHeader>
 
                                     <TableBody>
-                                        {session.attendances.map(
+                                        {filteredAttendance.map(
                                             (attendance) => (
                                                 <TableRow key={attendance.id}>
                                                     <TableCell className="font-medium">
@@ -259,6 +304,7 @@ export default function TeacherSessionShow({ session }: SessionShowProps) {
                                         )}
                                     </TableBody>
                                 </Table>
+                                )}
                             </div>
                         )}
                     </CardContent>

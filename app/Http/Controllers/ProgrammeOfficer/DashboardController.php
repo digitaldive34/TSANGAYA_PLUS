@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ProgrammeOfficer;
 use App\Http\Controllers\Controller;
 use App\Models\Learner;
 use App\Models\LearningSession;
+use App\Models\Activity;
 use App\Models\WelfareNeed;
 use Inertia\Inertia;
 
@@ -28,6 +29,12 @@ class DashboardController extends Controller
                 ->count(),
 
             'totalSessions' => LearningSession::count(),
+
+            'recentTeacherActivities' => Activity::with('user')
+                ->where('role', 'Teacher')
+                ->latest()
+                ->take(5)
+                ->get(),
         ]);
     }
 }

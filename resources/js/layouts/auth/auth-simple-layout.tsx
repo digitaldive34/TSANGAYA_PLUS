@@ -33,13 +33,13 @@ export default function AuthSimpleLayout({
                 </div>
 
                 <div className="relative z-10 max-w-xl">
-                    <p className="text-sm font-semibold tracking-widest text-amber-400">
+                    <p className="text-sm font-semibold tracking-widest text-amber-500">
                         WELCOME TO TSANGAYA+
                     </p>
 
                     <h2 className="mt-5 text-4xl font-bold leading-tight text-white xl:text-5xl">
                         Making room for foundational learning.
-                        <span className="block text-amber-400">
+                        <span className="block text-amber-500">
                             Alongside Quranic education.
                         </span>
                     </h2>
@@ -48,13 +48,6 @@ export default function AuthSimpleLayout({
                         A platform for coordinating basic literacy, numeracy
                         and modern education within Tsangaya schedules, while
                         respecting Quranic learning.
-                    </p>
-                </div>
-
-                <div className="relative z-10 border-t border-white/20 pt-6">
-                    <p className="text-sm text-slate-400">
-                        Supporting traditional education through practical
-                        digital solutions.
                     </p>
                 </div>
             </div>

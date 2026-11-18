@@ -1,4 +1,5 @@
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
+import { useState } from "react";
 import { CalendarDays, Eye, Pencil, Plus } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +19,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import DataTableFilters from "@/components/data-table-filters";
 
 interface LearningSession {
     id: number;
@@ -46,6 +48,11 @@ interface PaginationLink {
 }
 
 interface LearningSessionsProps {
+    filters: {
+        search: string;
+        status: string;
+        class_group: string;
+    };
     sessions: {
         data: LearningSession[];
         links: PaginationLink[];
@@ -68,7 +75,28 @@ function getStatusVariant(status: LearningSession["status"]) {
 
 export default function LearningSessionsIndex({
     sessions,
+    filters,
 }: LearningSessionsProps) {
+    const [search, setSearch] = useState(filters.search);
+    const [status, setStatus] = useState(filters.status || "all");
+    const [classGroup, setClassGroup] = useState(filters.class_group || "all");
+    const applyFilters = () =>
+        router.get(
+            "/admin/learning-sessions",
+            {
+                search: search || undefined,
+                status: status === "all" ? undefined : status,
+                class_group: classGroup === "all" ? undefined : classGroup,
+            },
+            { preserveState: true, preserveScroll: true },
+        );
+    const clearFilters = () => {
+        setSearch("");
+        setStatus("all");
+        setClassGroup("all");
+        router.get("/admin/learning-sessions");
+    };
+
     return (
         <>
             <Head title="Learning Sessions" />
@@ -103,6 +131,39 @@ export default function LearningSessionsIndex({
                     </CardHeader>
 
                     <CardContent>
+                        <DataTableFilters
+                            search={search}
+                            searchPlaceholder="Search topic, centre, subject, or teacher"
+                            onSearchChange={setSearch}
+                            filters={[
+                                {
+                                    key: "status",
+                                    label: "Status",
+                                    value: status,
+                                    onChange: setStatus,
+                                    options: [
+                                        { label: "All statuses", value: "all" },
+                                        { label: "Scheduled", value: "Scheduled" },
+                                        { label: "Delivered", value: "Delivered" },
+                                        { label: "Cancelled", value: "Cancelled" },
+                                        { label: "Rescheduled", value: "Rescheduled" },
+                                    ],
+                                },
+                                {
+                                    key: "class",
+                                    label: "Class",
+                                    value: classGroup,
+                                    onChange: setClassGroup,
+                                    options: [
+                                        { label: "All classes", value: "all" },
+                                        { label: "Class A", value: "Class A" },
+                                        { label: "Class B", value: "Class B" },
+                                    ],
+                                },
+                            ]}
+                            onApply={applyFilters}
+                            onClear={clearFilters}
+                        />
                         {
                             <CardContent>
                                 <Table>

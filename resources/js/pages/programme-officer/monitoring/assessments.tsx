@@ -1,4 +1,5 @@
-import { Head } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
+import { useState } from "react";
 import { ClipboardList } from "lucide-react";
 
 import {
@@ -17,6 +18,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import DataTableFilters from "@/components/data-table-filters";
 
 interface Centre {
     id: number;
@@ -53,6 +55,7 @@ interface Props {
     subjects: Subject[];
     records: AssessmentRecord[];
     filters: {
+        search?: string;
         centre_id?: string;
         subject_id?: string;
         class_group?: string;
@@ -60,8 +63,34 @@ interface Props {
 }
 
 export default function AssessmentMonitoring({
+    centres,
+    subjects,
     records,
+    filters,
 }: Props) {
+    const [search, setSearch] = useState(filters.search ?? "");
+    const [centreId, setCentreId] = useState(filters.centre_id ?? "all");
+    const [subjectId, setSubjectId] = useState(filters.subject_id ?? "all");
+    const [classGroup, setClassGroup] = useState(filters.class_group ?? "all");
+    const applyFilters = () =>
+        router.get(
+            "/programme-officer/monitoring/assessments",
+            {
+                search: search || undefined,
+                centre_id: centreId === "all" ? undefined : centreId,
+                subject_id: subjectId === "all" ? undefined : subjectId,
+                class_group: classGroup === "all" ? undefined : classGroup,
+            },
+            { preserveState: true, preserveScroll: true },
+        );
+    const clearFilters = () => {
+        setSearch("");
+        setCentreId("all");
+        setSubjectId("all");
+        setClassGroup("all");
+        router.get("/programme-officer/monitoring/assessments");
+    };
+
     return (
         <>
             <Head title="Assessment Monitoring" />
@@ -93,7 +122,53 @@ export default function AssessmentMonitoring({
                         </CardDescription>
                     </CardHeader>
 
-                    <CardContent>
+                    <CardContent className="space-y-4">
+                        <DataTableFilters
+                            search={search}
+                            searchPlaceholder="Search learner, code, centre, or subject"
+                            onSearchChange={setSearch}
+                            filters={[
+                                {
+                                    key: "centre",
+                                    label: "Centre",
+                                    value: centreId,
+                                    onChange: setCentreId,
+                                    options: [
+                                        { label: "All centres", value: "all" },
+                                        ...centres.map((centre) => ({
+                                            label: centre.name,
+                                            value: String(centre.id),
+                                        })),
+                                    ],
+                                },
+                                {
+                                    key: "subject",
+                                    label: "Subject",
+                                    value: subjectId,
+                                    onChange: setSubjectId,
+                                    options: [
+                                        { label: "All subjects", value: "all" },
+                                        ...subjects.map((subject) => ({
+                                            label: subject.name,
+                                            value: String(subject.id),
+                                        })),
+                                    ],
+                                },
+                                {
+                                    key: "class",
+                                    label: "Class",
+                                    value: classGroup,
+                                    onChange: setClassGroup,
+                                    options: [
+                                        { label: "All classes", value: "all" },
+                                        { label: "Class A", value: "Class A" },
+                                        { label: "Class B", value: "Class B" },
+                                    ],
+                                },
+                            ]}
+                            onApply={applyFilters}
+                            onClear={clearFilters}
+                        />
                         {records.length === 0 ? (
                             <p className="py-8 text-center text-sm text-muted-foreground">
                                 No assessment records found.

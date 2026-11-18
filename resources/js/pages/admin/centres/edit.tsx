@@ -64,13 +64,13 @@ export default function EditCentre({ centre }: Props) {
                     </Button>
 
                     <div>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-xs text-muted-foreground">
                             TSANGAYA+ / Centre Management
                         </p>
                         <h1 className="text-2xl font-bold tracking-tight">
                             Edit Centre
                         </h1>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-xs text-muted-foreground">
                             Update the information for {centre.name}.
                         </p>
                     </div>
